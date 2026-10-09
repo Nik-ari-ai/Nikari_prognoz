@@ -1,0 +1,6 @@
+scale_reference_cutoff,scale_floor,onsets_total,december_onsets,is_causal_vs_test
+2023-12,0.068794,58,0,True
+2024-01,0.100074,10,0,True
+2024-05,0.093607,14,0,False
+2024-08,0.086614,18,0,False
+2024-12,0.087972,18,0,False

@@ -1,0 +1,17 @@
+test_origin,mature,status,method,train_months,train_onset_positives,december_share_in_labeling,alarms,event_hits,event_false_alarms,onset_events_eligible,event_precision,event_recall,mean_lead_time_months,label_fully_observed_at
+2024-02,True,evaluated,logistic,2,1201,0.9834437086092715,202,0.0,202.0,0.0,0.0,,,2024-06
+2024-02,True,evaluated,dev_from_median,2,1201,0.9834437086092715,202,0.0,202.0,0.0,0.0,,,2024-06
+2024-02,True,evaluated,last_change,2,1201,0.9834437086092715,202,0.0,202.0,0.0,0.0,,,2024-06
+2024-02,True,evaluated,volatility,2,1201,0.9834437086092715,202,0.0,202.0,0.0,0.0,,,2024-06
+2024-05,True,evaluated,logistic,5,4097,0.9755219582433405,202,2.0,200.0,5.0,0.009900990099009901,0.4,3.0,2024-09
+2024-05,True,evaluated,dev_from_median,5,4097,0.9755219582433405,202,2.0,200.0,5.0,0.009900990099009901,0.4,3.0,2024-09
+2024-05,True,evaluated,last_change,5,4097,0.9755219582433405,202,4.0,198.0,5.0,0.019801980198019802,0.8,3.0,2024-09
+2024-05,True,evaluated,volatility,5,4097,0.9755219582433405,202,0.0,202.0,5.0,0.0,0.0,,2024-09
+2024-08,True,evaluated,logistic,8,2685,0.9844271412680756,202,0.0,202.0,2.0,0.0,0.0,,2024-12
+2024-08,True,evaluated,dev_from_median,8,2685,0.9844271412680756,202,0.0,202.0,2.0,0.0,0.0,,2024-12
+2024-08,True,evaluated,last_change,8,2685,0.9844271412680756,202,0.0,202.0,2.0,0.0,0.0,,2024-12
+2024-08,True,evaluated,volatility,8,2685,0.9844271412680756,202,2.0,200.0,2.0,0.009900990099009901,1.0,1.0,2024-12
+2024-11,False,pending_unobserved_future,logistic,11,1231,0.9829683698296837,202,,,,,,,2025-03
+2024-11,False,pending_unobserved_future,dev_from_median,11,1231,0.9829683698296837,202,,,,,,,2025-03
+2024-11,False,pending_unobserved_future,last_change,11,1231,0.9829683698296837,202,,,,,,,2025-03
+2024-11,False,pending_unobserved_future,volatility,11,1231,0.9829683698296837,202,,,,,,,2025-03

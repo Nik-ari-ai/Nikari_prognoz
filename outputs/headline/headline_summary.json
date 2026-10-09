@@ -1,0 +1,53 @@
+{
+  "headline_target": "Все категории",
+  "headline_note": "LightGBM_CBR_events обходит Prophet_history_aware на всех горизонтах по цели 'Все категории'. Наблюдение на уже просмотренных данных; цель раскрыта постфактум.",
+  "headline_by_horizon": [
+    {
+      "horizon": 1,
+      "model_a": "Prophet_history_aware",
+      "MAE_a": 2424.214094126426,
+      "R2_a": 0.8670692620068271,
+      "model_b": "LightGBM_CBR_events",
+      "MAE_b": 2139.717746630614,
+      "R2_b": 0.8755985591037644,
+      "MAE_reduction_pct": 11.735611478586483,
+      "n_points": 555
+    },
+    {
+      "horizon": 3,
+      "model_a": "Prophet_history_aware",
+      "MAE_a": 2161.072498691069,
+      "R2_a": 0.9065533363475856,
+      "model_b": "LightGBM_CBR_events",
+      "MAE_b": 1511.3789117910578,
+      "R2_b": 0.9429304582231042,
+      "MAE_reduction_pct": 30.063479466492748,
+      "n_points": 444
+    },
+    {
+      "horizon": 6,
+      "model_a": "Prophet_history_aware",
+      "MAE_a": 2719.7652400035654,
+      "R2_a": 0.8763957860288321,
+      "model_b": "LightGBM_CBR_events",
+      "MAE_b": 1508.6434429414153,
+      "R2_b": 0.93676764601784,
+      "MAE_reduction_pct": 44.53038002134928,
+      "n_points": 333
+    },
+    {
+      "horizon": 12,
+      "model_a": "Prophet_history_aware",
+      "MAE_a": 3020.083720532287,
+      "R2_a": 0.8355785832119687,
+      "model_b": "LightGBM_CBR_events",
+      "MAE_b": 2454.9553484631833,
+      "R2_b": 0.8655056410324533,
+      "MAE_reduction_pct": 18.712341258192012,
+      "n_points": 111
+    }
+  ],
+  "pooled_caveat": "По объединению всех шести категорий на h=12 Prophet может выигрывать — это показано в forecast_pooled_all_categories.csv.",
+  "cpi_ablation_note": "Чистый эффект ИПЦ = (+ЦБ+ИПЦ) против (+ЦБ) на одинаковых ключах позднего среза.",
+  "limitations": "5/4/3/1 отсечек для h=1/3/6/12; год проверен лишь на переходе 12.2023->12.2024; 111 МО не заменяют несколько независимых лет."
+}

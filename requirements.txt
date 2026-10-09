@@ -1,0 +1,16 @@
+# Проверено на Python 3.13. Снимок зависимостей проекта: environment.freeze.txt.
+numpy==2.4.1
+pandas==2.3.3
+pyarrow==25.0.1
+openpyxl==3.1.5
+PyYAML==6.0.2
+prophet==1.5.0
+statsmodels==0.15.0
+lightgbm==4.7.0
+catboost==1.2.10
+scipy==1.17.0
+scikit-learn==1.8.0
+chronos-forecasting==2.3.2
+torch==2.11.0
+transformers==5.19.0
+huggingface-hub==1.31.0

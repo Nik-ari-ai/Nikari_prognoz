@@ -1,0 +1,125 @@
+{
+  "description": "Единая pooled-таблица по всем категориям; общие ключи всех моделей.",
+  "models": [
+    "CatBoost_global",
+    "Chronos_Bolt_tiny",
+    "ETS",
+    "Ensemble_CatBoost_LightGBM",
+    "LightGBM_CBR_events",
+    "LightGBM_checked",
+    "Prophet_history_aware",
+    "Prophet_original_setting",
+    "SeasonalNaive"
+  ],
+  "horizons": [
+    1,
+    3,
+    6,
+    12
+  ],
+  "selection_candidates": [
+    "CatBoost_global",
+    "Chronos_Bolt_tiny",
+    "ETS",
+    "Ensemble_CatBoost_LightGBM",
+    "LightGBM_CBR_events",
+    "LightGBM_checked",
+    "Prophet_history_aware",
+    "Prophet_original_setting",
+    "SeasonalNaive"
+  ],
+  "selection_rule": "argmin MAE на ранних отсечках (early_cutoffs); поздние факты в выборе не участвуют — выбор делает чистая функция select_strategy_on_early",
+  "early_cutoffs": [
+    "2023-12",
+    "2024-03",
+    "2024-06"
+  ],
+  "late_cutoffs": [
+    "2024-09",
+    "2024-11"
+  ],
+  "benchmark_best_by_horizon": {
+    "1": {
+      "model": "CatBoost_global",
+      "mae_full_table": 558.9
+    },
+    "3": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "mae_full_table": 483.1
+    },
+    "6": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "mae_full_table": 689.3
+    },
+    "12": {
+      "model": "Prophet_history_aware",
+      "mae_full_table": 909.9
+    }
+  },
+  "selected_on_early": {
+    "1": {
+      "model": "Prophet_history_aware",
+      "mae_early": 688.0
+    },
+    "3": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "mae_early": 498.7
+    },
+    "6": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "mae_early": 689.3
+    },
+    "12": {
+      "model": "Prophet_history_aware",
+      "mae_early": 909.9
+    }
+  },
+  "late_evaluation": {
+    "1": {
+      "model": "Prophet_history_aware",
+      "status": "evaluated_late",
+      "mae_late": 863.2,
+      "best_late_reference": {
+        "model": "Ensemble_CatBoost_LightGBM",
+        "mae_late": 297.0
+      },
+      "outcome": "на позднем срезе выбор уступил модели Ensemble_CatBoost_LightGBM (её поздний MAE 297.0)",
+      "note": "поздний срез только измеряет неизменный выбор; результат (в т.ч. проигрыш) не пересматривает раннее решение"
+    },
+    "3": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "status": "evaluated_late",
+      "mae_late": 436.3,
+      "best_late_reference": {
+        "model": "Ensemble_CatBoost_LightGBM",
+        "mae_late": 436.3
+      },
+      "outcome": "на позднем срезе выбор оказался лучшим",
+      "note": "поздний срез только измеряет неизменный выбор; результат (в т.ч. проигрыш) не пересматривает раннее решение"
+    },
+    "6": {
+      "model": "Ensemble_CatBoost_LightGBM",
+      "status": "not_evaluated_late",
+      "mae_late": null,
+      "note": "нет зрелых поздних меток для этого горизонта; выбор не проверялся на позднем срезе (отсутствие проверки не доказывает ни пользу, ни бесполезность)"
+    },
+    "12": {
+      "model": "Prophet_history_aware",
+      "status": "not_evaluated_late",
+      "mae_late": null,
+      "note": "нет зрелых поздних меток для этого горизонта; выбор не проверялся на позднем срезе (отсутствие проверки не доказывает ни пользу, ни бесполезность)"
+    }
+  },
+  "winner_by_horizon": {
+    "1": "CatBoost_global",
+    "3": "Ensemble_CatBoost_LightGBM",
+    "6": "Ensemble_CatBoost_LightGBM",
+    "12": "Prophet_history_aware"
+  },
+  "winner_by_horizon_meaning": "ОПИСАТЕЛЬНЫЙ победитель полной ретроспективной таблицы (argmin MAE). Это НЕ независимый результат и НЕ стратегия, выбранная до проверки; см. selected_on_early и late_evaluation",
+  "catboost_added": true,
+  "ensemble_in_table": true,
+  "ensemble_type": "простое заранее заданное среднее 0.5*CatBoost + 0.5*LightGBM (веса не подбирались)",
+  "no_untouched_final_test": "ретроспективное разбиение уже просмотренных данных НЕ является нетронутым финальным тестом; для него нужен новый период. Ранний выбор честен, но свежей проверки нет",
+  "note": "Три разведённых понятия (аудит v16). benchmark_best_by_horizon — описательный минимум полной ретроспективной таблицы (НЕ независимый результат). selected_on_early — стратегия, выбранная только по ранним фактам из девяти кандидатов правилом argmin раннего MAE. late_evaluation — измерение этого неизменного выбора на позднем срезе (проигрыш тоже публикуется; h=6/h=12 — not_evaluated_late, зрелых поздних меток нет). Поздний срез в выборе НЕ участвует. Детали выбора: h=1: выбран Prophet_history_aware (ранний MAE 688.0), поздний MAE 863.2 — на позднем срезе выбор уступил модели Ensemble_CatBoost_LightGBM (её поздний MAE 297.0); h=3: выбран Ensemble_CatBoost_LightGBM (ранний MAE 498.7), поздний MAE 436.3 — на позднем срезе выбор оказался лучшим; h=6: выбран Ensemble_CatBoost_LightGBM (ранний MAE 689.3), поздней оценки нет; h=12: выбран Prophet_history_aware (ранний MAE 909.9), поздней оценки нет."
+}

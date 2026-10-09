@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "seconds": 246.03855895996094,
+  "territories_requested": 120,
+  "versions": {
+    "pandas": "2.3.3",
+    "numpy": "2.4.1",
+    "prophet": "1.5.0",
+    "lightgbm": "4.7.0",
+    "statsmodels": "0.15.0",
+    "chronos-forecasting": "2.3.2",
+    "torch": "2.11.0"
+  },
+  "foundation_revision": "a0e552de83495b5c28c14c71c374f3e33280b340",
+  "evaluation": "exploratory; not an untouched final test",
+  "availability_assumption": "Расходы месяца доступны на его конец. История фактических публикаций отсутствует.",
+  "training_scope": "LightGBM использует все МО с известными к отсечке целями; локальные модели используют свой ряд."
+}

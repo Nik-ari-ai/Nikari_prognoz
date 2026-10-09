@@ -1,0 +1,5 @@
+method,total_alarms,total_hits,total_false_alarms,total_events,event_precision,event_recall,mean_lead_time_months
+logistic,404,16,388,25,0.039603960396039604,0.64,1.9375
+volatility,404,16,388,25,0.039603960396039604,0.64,1.9375
+last_change,404,13,391,25,0.03217821782178218,0.52,1.9230769230769234
+dev_from_median,404,2,402,25,0.0049504950495049506,0.08,2.0

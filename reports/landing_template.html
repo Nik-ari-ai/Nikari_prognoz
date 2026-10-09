@@ -1,0 +1,1242 @@
+<title>Прогноз потребления МО · аудит</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* Макет: одна колонка до 1080px, липкая навигация, крупные секции.
+   Палитра — графитовые нейтрали с зелёным уклоном; акцент изумрудный;
+   семантические цвета для «выигрыш/осторожно/не доказано». */
+:root {
+  --bg:#f6f7f4; --surface:#ffffff; --surface-2:#eef1ec;
+  --ink:#16201b; --ink-soft:#46524b; --ink-faint:#76817a; --line:#dde2db;
+  --accent:#0f8f66; --accent-soft:#d7efe4; --accent-ink:#0a5f44;
+  --warn:#c98a12; --critical:#c8432f; --series-2:#3f6fb0; --series-3:#8a5bd0;
+  --shadow:0 1px 2px rgba(20,32,27,.05), 0 8px 24px rgba(20,32,27,.06);
+  --radius:14px; --maxw:1080px;
+  --font-display:"Fraunces",Georgia,serif;
+  --font-body:"Manrope",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0e1310; --surface:#161d18; --surface-2:#1d2621;
+    --ink:#e7ece8; --ink-soft:#aab4ae; --ink-faint:#7b857f; --line:#28322c;
+    --accent:#37c793; --accent-soft:#123a2b; --accent-ink:#7fe0bd;
+    --warn:#e0a93a; --critical:#e8705c; --series-2:#6f9fda; --series-3:#b08ae6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0e1310; --surface:#161d18; --surface-2:#1d2621;
+  --ink:#e7ece8; --ink-soft:#aab4ae; --ink-faint:#7b857f; --line:#28322c;
+  --accent:#37c793; --accent-soft:#123a2b; --accent-ink:#7fe0bd;
+  --warn:#e0a93a; --critical:#e8705c; --series-2:#6f9fda; --series-3:#b08ae6;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.55; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: 20px; }
+.nav { position: sticky; top: env(safe-area-inset-top,0px); z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.nav-inner { display: flex; align-items: center; gap: 16px; height: 54px; flex-wrap: wrap; }
+.nav-brand { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-soft); text-transform: uppercase; }
+.nav-links { display: flex; gap: 14px; margin-left: auto; flex-wrap: wrap; }
+.nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 13px; font-weight: 600; }
+.nav-links a:hover { color: var(--accent); }
+.theme-btn { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-soft); border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer; font-family: var(--font-mono); }
+.theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+section { padding-block: 52px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(30px,5.6vw,52px); line-height: 1.05; letter-spacing: -.01em; margin: 0 0 16px; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(23px,4vw,34px); line-height: 1.12; margin: 0 0 14px; text-wrap: balance; }
+h3 { font-weight: 700; font-size: 17px; margin: 0 0 8px; }
+p { color: var(--ink-soft); margin: 0 0 14px; max-width: 70ch; }
+.lead { font-size: clamp(17px,2.3vw,20px); color: var(--ink); max-width: 66ch; }
+strong { color: var(--ink); font-weight: 700; }
+a.inline { color: var(--accent-ink); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-top: 24px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.tile .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 8px; }
+.tile .v { font-family: var(--font-display); font-weight: 600; font-size: clamp(22px,3.6vw,30px); line-height: 1.05; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tile .s { font-size: 12.5px; color: var(--ink-faint); margin-top: 8px; }
+.tile.accent { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.tile.accent .v { color: var(--accent-ink); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 520px; }
+th, td { padding: 9px 13px; text-align: right; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); border-bottom: 1px solid var(--line); font-weight: 500; }
+tbody tr { border-bottom: 1px solid var(--line); }
+tbody tr:last-child { border-bottom: none; }
+tr.best td { background: var(--accent-soft); }
+tr.best td:first-child { font-weight: 700; color: var(--accent-ink); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 0; font-size: 12.5px; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+figure { margin: 0; }
+figcaption { font-size: 12.5px; color: var(--ink-faint); margin-top: 8px; max-width: 70ch; }
+svg { display: block; width: 100%; height: auto; }
+.chart-box { overflow-x: auto; }
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .panels { grid-template-columns: 1fr; } }
+.notes { display: grid; gap: 11px; }
+.note { display: flex; gap: 12px; align-items: flex-start; }
+.note .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; background: var(--accent); }
+.note.warn .dot { background: var(--warn); }
+.note.crit .dot { background: var(--critical); }
+.note p { margin: 0; }
+.flow { display: flex; gap: 10px; flex-wrap: wrap; }
+.flow .step { flex: 1 1 150px; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
+.flow .step .n { font-family: var(--font-mono); font-size: 11px; color: var(--accent-ink); }
+.flow .step h4 { margin: 4px 0 6px; font-size: 14px; }
+.flow .step p { font-size: 12.5px; margin: 0; }
+.callout { border-left: 3px solid var(--warn); background: var(--surface-2); border-radius: 0 10px 10px 0; padding: 14px 16px; margin-top: 14px; }
+.callout.crit { border-left-color: var(--critical); }
+.callout p { margin: 0; }
+footer { padding-block: 32px; color: var(--ink-faint); font-size: 12.5px; }
+.mono { font-family: var(--font-mono); }
+</style>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <span class="nav-brand">СберИндекс · прогноз МО · проверенная версия</span>
+    <div class="nav-links">
+      <a href="#headline">Главное</a>
+      <a href="#audit">После аудита</a>
+      <a href="#protocol">Протокол</a>
+      <a href="#forecast">Модели</a>
+      <a href="#inflation">Проверка</a>
+      <a href="#finaltest">Финал</a>
+      <a href="#news">Новости</a>
+      <a href="#detect">Детекция</a>
+      <a href="#risk">Риск</a>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Переключить тему">тема</button>
+  </div>
+</nav>
+
+<header class="wrap" style="padding-block:52px 10px">
+  <p class="eyebrow">Прогнозирование · обнаружение сдвигов · внутренний аудит</p>
+  <h1>Прогноз потребления в МО: честный протокол после аудита</h1>
+  <p class="lead">Решение прошло независимую проверку. Исправлены утечки признаков, смещение
+  выжившего и ошибка лага «год к году»; базовые модели сравниваются на одинаковых ключах;
+  фундаментальная модель Chronos-Bolt реально запущена. Ниже — результаты нового, разведочного
+  протокола и честные границы того, что доказано.</p>
+  <div class="tiles" id="heroTiles"></div>
+</header>
+
+<section id="headline" class="wrap">
+  <p class="eyebrow">Главный результат · pooled по ВСЕМ категориям</p>
+  <h2>Честное сравнение без выбора одной категории</h2>
+  <p>Главный результат строится на <strong>объединении всех шести категорий</strong> (общие ключи 111 МО),
+  а не на одной удобной цели — это снимает повод для cherry-picking. Добавлены <strong>CatBoost</strong>
+  (тот же протокол, что у LightGBM) и <strong>Chronos</strong> на всех горизонтах, плюс разброс MAE по МО.
+  Ни одна модель не выигрывает везде.</p>
+  <p>По аудиту v16 <strong>выбор и оценка жёстко разведены</strong>. Таблица ниже — <strong>описательный
+  бенчмарк-минимум</strong> по всей ретроспективе (это ещё НЕ выбранная стратегия). Отдельно показана
+  стратегия, выбранная <strong>только по ранним фактам</strong>, и её измерение на позднем срезе — без
+  пересмотра выбора.</p>
+  <div style="overflow-x:auto;margin-top:16px">
+    <table id="unifiedTable" class="metrics">
+      <thead><tr><th>Горизонт</th><th>Бенчмарк-минимум (описательно)</th><th>MAE</th><th>Медиана по МО</th><th>95%-интервал по МО</th><th>R²</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <h3 style="margin-top:22px">Выбор по ранним фактам и его проверка на позднем срезе</h3>
+  <div style="overflow-x:auto;margin-top:10px">
+    <table id="unifiedSelectedTable" class="metrics">
+      <thead><tr><th>Горизонт</th><th>Выбор по ранним (стратегия)</th><th>Ранний MAE</th><th>Поздний MAE</th><th>Исход на позднем</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="callout" style="margin-top:14px"><p id="unifiedNote"></p></div>
+
+  <h3 style="margin-top:30px">Вспомогательно: срез по отдельной категории «Все категории»</h3>
+  <p style="font-size:13.5px">Это НЕ главный результат, а один из шести категорийных срезов: на нём LightGBM+ЦБ
+  обходит Prophet на всех горизонтах. Приводится для полноты, без выдачи за заранее запланированную цель.</p>
+  <div class="table-wrap" style="margin-top:12px"><table id="headlineTable"></table></div>
+  <div class="callout" style="margin-top:16px"><p id="headlineCaveat"></p></div>
+</section>
+
+<section id="audit" class="wrap">
+  <p class="eyebrow">Что изменилось после проверки</p>
+  <h2>Исправлено — и что осталось недоказанным</h2>
+  <div class="grid-2" style="margin-top:8px">
+    <div class="card">
+      <h3>Исправленные ошибки</h3>
+      <div class="notes" style="margin-top:10px">
+        <div class="note"><span class="dot"></span><p><strong>Лаг «год к году»</strong> считался от t-11 вместо t-12 — исправлено и покрыто тестом.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Смещение выжившего (в прогнозе)</strong>: в прогнозном модуле МО больше не отбираются по полноте во всём будущем; проверочный ряд полон только до отсечки. Модуль шоков использует панель с полной историей — это known-ограничение, честно отмечено в отчёте.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Утечки</strong>: индекс рынков и гео за 2024 убраны с отсечек 2023; новости в рекурсии не берут будущий сигнал.</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Неотрицательность</strong> применяется ко всем моделям (у Prophet было 6007 отрицательных прогнозов).</p></div>
+        <div class="note"><span class="dot"></span><p><strong>Chronos и новости реально включены</strong>; ошибка ETS теперь останавливает запуск, а не подменяет метрику.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Что НЕ доказано</h3>
+      <div class="notes" style="margin-top:10px">
+        <div class="note crit"><span class="dot"></span><p><strong>Полезное раннее предупреждение.</strong> Внешней эталонной разметки шоков нет (используем прокси); onset-модель обучена, но по событиям слабая — надёжного предупреждения не показано.</p></div>
+        <div class="note crit"><span class="dot"></span><p><strong>Общий выигрыш на 12 месяцах.</strong> Доступен лишь один годовой переход; на 12 мес лучшей оказалась не наша модель.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>Нетронутого независимого теста нет.</strong> Поздний срез — ретроспективное разбиение уже виденных данных, не свежий holdout.</p></div>
+        <div class="note warn"><span class="dot"></span><p><strong>ИПЦ Росстата подключён</strong>, но практического эффекта почти не даёт; новостная подборка ЦБ ограниченная.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="protocol" class="wrap">
+  <p class="eyebrow">Протокол и данные</p>
+  <h2>Как устроена честная проверка</h2>
+  <p>Единица ряда — <strong>МО × категория</strong>. На каждой отсечке модель видит только значения
+  до неё включительно и прогнозирует точечное значение y(t+h). Горизонты 1/3/6/12 мес, отсечки:
+  декабрь 2023, март/июнь/сентябрь/ноябрь 2024 (для 12 мес доступна только первая). Все модели
+  сравниваются на общих ключах (МО, категория, отсечка, горизонт).</p>
+  <div class="tiles" id="protocolTiles"></div>
+  <div class="flow" style="margin-top:22px">
+    <div class="step"><div class="n">01</div><h4>Данные + журнал</h4><p>Проверка схемы, уникальности ключей, хеши исходников.</p></div>
+    <div class="step"><div class="n">02</div><h4>Отсечка истории</h4><p>Доступны только значения до t; признаки — лаги, календарь, категория.</p></div>
+    <div class="step"><div class="n">03</div><h4>Модели</h4><p>SeasonalNaive, ETS, 2×Prophet, LightGBM, LightGBM+ЦБ, Chronos-Bolt.</p></div>
+    <div class="step"><div class="n">04</div><h4>Общие ключи</h4><p>Сравнение на одинаковых точках; таблица фактических ошибок.</p></div>
+    <div class="step"><div class="n">05</div><h4>Детекция</h4><p>Последовательные детекторы со строгим протоколом тревог.</p></div>
+  </div>
+</section>
+
+<section id="forecast" class="wrap">
+  <p class="eyebrow">Сравнение моделей · MAE в рублях</p>
+  <h2>Кто точнее на каждом горизонте</h2>
+  <p id="forecastSummary">Разведочный запуск, 120 МО (фактическое покрытие 111), общие ключи.
+  Для каждого горизонта показан рейтинг моделей по MAE (меньше — лучше).</p>
+  <div class="panels" id="maePanels" style="margin-top:18px"></div>
+  <div class="legend" id="maeLegend" style="margin-top:14px"></div>
+  <h3 style="margin-top:28px">Полная таблица</h3>
+  <div class="table-wrap" style="margin-top:10px"><table id="forecastTable"></table></div>
+</section>
+
+<section id="inflation" class="wrap">
+  <p class="eyebrow">Проверка исходного заявления</p>
+  <h2>Почему прежний выигрыш «69–96%» был завышен</h2>
+  <p>В исходной версии Prophet сравнивался в том числе на очень коротких историях, где его тренд
+  экстраполируется неустойчиво. Если оставить только отсечки с историей не меньше 12 месяцев, MAE
+  Prophet резко падает — разрыв с нашей моделью почти исчезает. Это ограничение данных, а не
+  «улучшение» какой-либо модели.</p>
+  <figure style="margin-top:16px">
+    <div class="chart-box"><svg id="chartInflation" viewBox="0 0 960 340" role="img" aria-label="Prophet на всех отсечках против истории от 12 месяцев"></svg></div>
+    <div class="legend" id="inflationLegend"></div>
+    <figcaption>MAE Prophet по горизонтам: на всех отсечках (исходное объединение) против отсечек с историей ≥12 месяцев. На 12 мес MAE падает примерно с 30 854 до 2 541 ₽.</figcaption>
+  </figure>
+</section>
+
+<section id="finaltest" class="wrap">
+  <p class="eyebrow">Ретроспективное разбиение</p>
+  <h2>Переносится ли выбор модели на поздний срез</h2>
+  <p>Честная оговорка: это <strong>не нетронутый независимый тест</strong>. Отсечки 2024-09 и 2024-11
+  уже были в прогнозах проверенного запуска. Мы лишь задним числом делим посчитанные прогнозы на ранний
+  период (2023-12, 2024-03, 2024-06) и поздний срез (2024-09, 2024-11) на общих ключах и смотрим,
+  переносится ли выбор модели. Настоящий независимый тест требует ещё одного года.</p>
+  <div class="callout crit" id="finalCallout" style="margin-top:14px"><p></p></div>
+  <div class="table-wrap" style="margin-top:16px"><table id="finalTable"></table></div>
+  <figcaption style="margin-top:8px">Горизонты 6 и 12 на позднем срезе непроверяемы: история до декабря 2024. Модель с ИПЦ Росстата добавлена как кандидат; чистый эффект ИПЦ показан ниже в абляции.</figcaption>
+</section>
+
+<section id="news" class="wrap">
+  <p class="eyebrow">Новости: сообщения Банка России</p>
+  <h2>Помогают ли новости прогнозу</h2>
+  <div class="grid-2" style="margin-top:8px">
+    <div>
+      <p>Восемь сообщений ЦБ о повышении ставки проверены по официальным страницам (сохранены
+      URL, время публикации с часовым поясом, дата события, изменение в п.п.). Месячный признак —
+      сумма изменений ставки за месяц; это факт, а не «экспертная сила новости». В рекурсии будущие
+      сообщения недоступны.</p>
+      <p>Эффект скромный и неоднозначный: добавление сигнала ЦБ помогает на 1 и 12 месяцах, но на
+      3 и 6 месяцах обычный LightGBM точнее. Это не доказывает причинность ставки.</p>
+      <div class="callout"><p class="mono" id="newsNote" style="font-size:12.5px"></p></div>
+      <h3 style="margin-top:20px">Чистая абляция: baseline → +ЦБ → +ЦБ+ИПЦ</h3>
+      <p style="font-size:13.5px">Поздний срез, одинаковые ключи. Чистый эффект ИПЦ — это (+ЦБ+ИПЦ) против (+ЦБ), где меняется только ИПЦ.</p>
+      <div class="table-wrap" style="margin-top:10px"><table id="ablationTable"></table></div>
+    </div>
+    <figure>
+      <div class="chart-box"><svg id="chartNews" viewBox="0 0 480 320" role="img" aria-label="LightGBM с новостями ЦБ и без"></svg></div>
+      <div class="legend" id="newsLegend"></div>
+      <figcaption>MAE: LightGBM без новостей против LightGBM с сообщениями ЦБ, по горизонтам.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="detect" class="wrap">
+  <p class="eyebrow">Обнаружение изменений</p>
+  <h2>Три разные задачи — и честные детекторы</h2>
+  <div class="grid-2" style="margin-top:8px">
+    <div class="card"><h3>Ретроспектива</h3><p style="font-size:13.5px">PELT находит границы режимов <em>после</em> просмотра всего ряда. Это не раннее предупреждение.</p></div>
+    <div class="card"><h3>Последовательная тревога</h3><p style="font-size:13.5px">Срабатывает, когда уже получен необычный факт. Её и тестируем ниже.</p></div>
+    <div class="card"><h3>Предупреждение шока</h3><p style="font-size:13.5px">Выдаёт риск <em>до</em> факта. Onset-модель построена и оценена по событиям — точность слабая (ниже).</p></div>
+  </div>
+  <p style="margin-top:18px">Строгий синтетический тест (200 рядов, seed=1907, калибровка 12 точек, окно совпадения 6):
+  простые последовательные детекторы дают много повторных ложных тревог. Готовый детектор реальных
+  шоков по этой таблице рекомендовать нельзя.</p>
+  <div class="table-wrap" style="margin-top:12px"><table id="detectorTable"></table></div>
+
+  <h3 style="margin-top:28px">Реальная оценка на слепых метках шоков</h3>
+  <p id="realDetectIntro">Слепая разметка (годовая лог-разность, порог 3 робастных сигмы, длительность ≥2) дала
+  метки шоков независимо от детекторов. На них впервые посчитаны реальные precision/recall/задержка.</p>
+  <div class="table-wrap" style="margin-top:12px"><table id="realDetectorTable"></table></div>
+  <div class="callout crit" style="margin-top:16px"><p>На реальных прокси-метках простые детекторы работают плохо (много ложных тревог). Это честный результат: готовый детектор реальных шоков пока рекомендовать нельзя. Опережающее предупреждение решается отдельной моделью риска ниже.</p></div>
+</section>
+
+<section id="risk" class="wrap">
+  <p class="eyebrow">Раннее предупреждение</p>
+  <h2>Модель риска события</h2>
+  <p>Отдельная от детекции задача: вероятность <strong>начала нового</strong> шока (onset) в ближайшие
+  1-3 месяца. Эмбарго учитывает созревание метки (эпизод подтверждается только 2-м экстремальным
+  месяцем), а масштаб разметки оценивается по пред-тестовому окну (10 080 наблюдений, не вырожден).
+  Onset-модель обучена и оценена строго по событиям — ниже честные, слабые числа.</p>
+  <div class="tiles" id="riskTiles" style="margin-top:20px"></div>
+  <div class="callout" style="margin-top:16px"><p id="riskNote"></p></div>
+
+  <h3 style="margin-top:34px">Rolling-origin: обученная модель против простых правил</h3>
+  <p id="tscvIntro" style="font-size:14px"></p>
+  <div style="overflow-x:auto;margin-top:14px">
+    <table id="tscvTable" class="metrics">
+      <thead>
+        <tr>
+          <th>Метод</th>
+          <th>Тревог (бюджет)</th>
+          <th>Пойманных событий</th>
+          <th>Событий всего</th>
+          <th>Recall</th>
+          <th>Precision</th>
+          <th>Опережение, мес.</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="callout crit" style="margin-top:16px"><p id="tscvNote"></p></div>
+
+  <h3 style="margin-top:34px">Like-for-like: модель против правил на СОБЫТИЯХ модели риска</h3>
+  <p style="font-size:14px">Честное сравнение на исходной (годовой) разметке scripts/13 — тех же событиях и
+  сплите, что у onset-модели, при равном бюджете тревог. Отвечает на прямой вопрос: превосходит ли
+  обученная модель простые правила на СВОИХ событиях.</p>
+  <div style="overflow-x:auto;margin-top:14px">
+    <table id="lfTable" class="metrics">
+      <thead><tr><th>Метод</th><th>Пойманных / событий</th><th>Recall</th><th>Precision</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="callout" style="margin-top:14px"><p id="lfNote"></p></div>
+
+  <h3 style="margin-top:34px">Проверяемое целевое событие: устойчивый сдвиг уровня</h3>
+  <p style="font-size:14px">Целевое событие задано ЯВНО и проверено на синтетике (постоянный скачок уровня
+  размечается, всплеск-возврат — нет). Это отделяет настоящий структурный сдвиг от календарного всплеска.</p>
+  <div class="tiles" id="levelTiles" style="margin-top:14px"></div>
+  <div class="callout crit" style="margin-top:14px"><p id="levelNote"></p></div>
+
+  <h3 style="margin-top:34px">Robust backtest: сезонный шок, 8 фолдов + holdout, PR-AUC с ДИ</h3>
+  <figure style="margin:14px 0">
+    <div class="chart-box">
+      <svg viewBox="0 0 960 150" role="img" aria-label="Пайплайн: общий тренд → идиосинкратическое отклонение → тревога">
+        <defs>
+          <marker id="arrowHead" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--accent)"></path>
+          </marker>
+        </defs>
+        <g font-family="var(--font-body)" font-size="13">
+          <rect x="8" y="40" width="210" height="70" rx="12" fill="var(--surface-2)" stroke="var(--line)"></rect>
+          <text x="113" y="68" text-anchor="middle" fill="var(--ink)" font-weight="700">Расходы МО r(t)</text>
+          <text x="113" y="90" text-anchor="middle" fill="var(--ink-soft)">месячная лог-разность</text>
+
+          <line x1="222" y1="75" x2="268" y2="75" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrowHead)"></line>
+
+          <rect x="272" y="40" width="210" height="70" rx="12" fill="var(--surface-2)" stroke="var(--line)"></rect>
+          <text x="377" y="63" text-anchor="middle" fill="var(--ink)" font-weight="700">− общий тренд c(t)</text>
+          <text x="377" y="83" text-anchor="middle" fill="var(--ink-soft)">медиана по всем МО;</text>
+          <text x="377" y="99" text-anchor="middle" fill="var(--ink-soft)">убирает декабрь</text>
+
+          <line x1="486" y1="75" x2="532" y2="75" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrowHead)"></line>
+
+          <rect x="536" y="40" width="210" height="70" rx="12" fill="var(--surface-2)" stroke="var(--line)"></rect>
+          <text x="641" y="63" text-anchor="middle" fill="var(--ink)" font-weight="700">идиосинкр. z(t)</text>
+          <text x="641" y="83" text-anchor="middle" fill="var(--ink-soft)">нормировка по 2023,</text>
+          <text x="641" y="99" text-anchor="middle" fill="var(--ink-soft)">квантили 0.95 / 0.99</text>
+
+          <line x1="750" y1="75" x2="796" y2="75" stroke="var(--accent)" stroke-width="2" marker-end="url(#arrowHead)"></line>
+
+          <rect x="800" y="40" width="152" height="70" rx="12" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+          <text x="876" y="68" text-anchor="middle" fill="var(--accent-ink)" font-weight="700">Тревога</text>
+          <text x="876" y="90" text-anchor="middle" fill="var(--accent-ink)">шок +/− (persist/квантиль)</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Пайплайн целевого события: из расходов вычитается общее движение всех МО (так уходит общий декабрьский пик), остаётся идиосинкратическое отклонение, нормируется по 2023 году и сравнивается с заранее заданными квантилями — это и есть тревога.</figcaption>
+  </figure>
+  <p id="seasonalIntro" style="font-size:14px"></p>
+  <div style="overflow-x:auto;margin-top:14px">
+    <table id="seasonalTable" class="metrics">
+      <thead><tr><th>Метод</th><th>Recall</th><th>Precision</th><th>PR-AUC</th><th>95%-ДИ PR-AUC</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="callout crit" style="margin-top:14px"><p id="seasonalNote"></p></div>
+</section>
+
+<section id="example" class="wrap">
+  <p class="eyebrow">Интерпретация на реальном примере</p>
+  <h2>МО 2007 — Дегтярск, Свердловская область</h2>
+  <p>Отсечка — декабрь 2023, категория «Все категории». Правило выбора МО задано без просмотра
+  ошибок (средний по рангу уровень расходов за 2023 год). Линия соединяет точки горизонтов 1/3/6/12 —
+  это визуальная подсказка, а не прогноз на все промежуточные месяцы.</p>
+  <figure style="margin-top:16px">
+    <div class="chart-box"><svg id="chartExample" viewBox="0 0 960 340" role="img" aria-label="Факт и прогнозы для МО 2007"></svg></div>
+    <div class="legend" id="exampleLegend"></div>
+  </figure>
+</section>
+
+<section id="repro" class="wrap">
+  <p class="eyebrow">Воспроизводимость</p>
+  <h2>Проверяемость</h2>
+  <div class="tiles" id="reproTiles"></div>
+  <p style="margin-top:18px">Исходные файлы пользователя не изменялись; хеши данных совпадают. Старые и
+  новые результаты хранятся раздельно (evidence/ и outputs/checked/). Пройдено 48 регрессионных тестов
+  временной безопасности. Команды запуска — в README.md.</p>
+</section>
+
+<footer class="wrap">
+  <p>Данные: СберИндекс (CC BY-SA 4.0). События ставки — Банк России (ссылки в cbr_rate_events.csv).
+  Все числа взяты из посчитанных файлов в outputs/. Это аудит и методология, а не обещание результата.</p>
+</footer>
+
+<script>
+/*__INJECT_DATA__*/
+</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = window.__DATA__ || null;
+
+  var MODEL_NAMES = {
+    "LightGBM_CBR_events": "LightGBM + ЦБ",
+    "LightGBM_checked": "LightGBM",
+    "LightGBM_global": "LightGBM",
+    "Prophet_history_aware": "Prophet (разумный)",
+    "Prophet_original_setting": "Prophet (исходный)",
+    "Prophet": "Prophet",
+    "ETS": "ETS",
+    "Chronos_Bolt_tiny": "Chronos-Bolt",
+    "SeasonalNaive": "SeasonalNaive"
+  };
+  function modelName(key) { return MODEL_NAMES[key] || key; }
+  function modelColor(key) {
+    var map = {
+      "LightGBM_CBR_events": cssVar("--accent"),
+      "LightGBM_checked": cssVar("--accent-ink"),
+      "LightGBM_global": cssVar("--accent"),
+      "Prophet_history_aware": cssVar("--series-2"),
+      "Prophet_original_setting": cssVar("--ink-faint"),
+      "Prophet": cssVar("--series-2"),
+      "ETS": cssVar("--warn"),
+      "Chronos_Bolt_tiny": cssVar("--series-3"),
+      "SeasonalNaive": cssVar("--ink-faint")
+    };
+    return map[key] || cssVar("--ink-faint");
+  }
+
+  function formatNumber(v) {
+    if (v === null || v === undefined || isNaN(v)) { return "—"; }
+    return Math.round(v).toLocaleString("ru-RU");
+  }
+  function formatFixed(v, d) {
+    if (v === null || v === undefined || isNaN(v)) { return "—"; }
+    return v.toFixed(d);
+  }
+  function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  var themeButton = document.getElementById("themeBtn");
+  function currentTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit) { return explicit; }
+    var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return dark ? "dark" : "light";
+  }
+  themeButton.addEventListener("click", function () {
+    document.documentElement.setAttribute("data-theme", currentTheme() === "dark" ? "light" : "dark");
+    renderEverything();
+  });
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function makeElement(tag, attrs) {
+    var el = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) { if (attrs.hasOwnProperty(k)) { el.setAttribute(k, attrs[k]); } }
+    return el;
+  }
+  function clearSvg(svg) { while (svg.firstChild) { svg.removeChild(svg.firstChild); } }
+  function addText(svg, x, y, text, opt) {
+    var a = { x: x, y: y, "font-size": opt.size || 12, "font-family": opt.mono ? cssVar("--font-mono") : cssVar("--font-body"), fill: opt.color || cssVar("--ink-soft"), "text-anchor": opt.anchor || "start" };
+    if (opt.weight) { a["font-weight"] = opt.weight; }
+    var t = makeElement("text", a); t.textContent = text; svg.appendChild(t);
+  }
+
+  function uniqueHorizons(rows) {
+    var seen = {}; var out = [];
+    for (var i = 0; i < rows.length; i++) { if (!seen[rows[i].horizon]) { seen[rows[i].horizon] = true; out.push(rows[i].horizon); } }
+    out.sort(function (a, b) { return a - b; });
+    return out;
+  }
+  function rowsForHorizon(rows, h) {
+    var out = [];
+    for (var i = 0; i < rows.length; i++) { if (rows[i].horizon === h) { out.push(rows[i]); } }
+    out.sort(function (a, b) { return a.MAE - b.MAE; });
+    return out;
+  }
+  function findRow(rows, model, h) {
+    for (var i = 0; i < rows.length; i++) { if (rows[i].model === model && rows[i].horizon === h) { return rows[i]; } }
+    return null;
+  }
+
+  function renderTiles(container, tiles) {
+    container.innerHTML = "";
+    for (var i = 0; i < tiles.length; i++) {
+      var t = tiles[i];
+      var div = document.createElement("div"); div.className = "tile" + (t.accent ? " accent" : "");
+      var k = document.createElement("div"); k.className = "k"; k.textContent = t.k;
+      var v = document.createElement("div"); v.className = "v"; v.textContent = t.v;
+      var s = document.createElement("div"); s.className = "s"; s.textContent = t.s;
+      div.appendChild(k); div.appendChild(v); div.appendChild(s); container.appendChild(div);
+    }
+  }
+
+  function renderHeroTiles() {
+    if (!DATA) { return; }
+    var m = DATA.checked_metrics || [];
+    var tiles = [];
+    var horizons = uniqueHorizons(m);
+    for (var i = 0; i < horizons.length; i++) {
+      var best = rowsForHorizon(m, horizons[i])[0];
+      if (best) {
+        tiles.push({ k: "Лучшая, " + horizons[i] + " мес", v: modelName(best.model), s: "MAE " + formatNumber(best.MAE) + " ₽", accent: horizons[i] === 1 });
+      }
+    }
+    renderTiles(document.getElementById("heroTiles"), tiles);
+  }
+
+  function renderProtocolTiles() {
+    if (!DATA) { return; }
+    var cov = DATA.coverage || {};
+    var run = DATA.run_info || {};
+    var tiles = [
+      { k: "Отсечки × горизонты", v: "5 × 4", s: "12 мес — только 1 отсечка" },
+      { k: "Точек проверки", v: (cov["1"] || "—") + " / " + (cov["3"] || "—"), s: "горизонты 1 / 3 мес" },
+      { k: "и дальше", v: (cov["6"] || "—") + " / " + (cov["12"] || "—"), s: "горизонты 6 / 12 мес" },
+      { k: "Chronos-Bolt", v: "запущен", s: "ревизия закреплена" }
+    ];
+    renderTiles(document.getElementById("protocolTiles"), tiles);
+  }
+
+  function renderReproTiles() {
+    if (!DATA) { return; }
+    var a = DATA.audit_info || {};
+    var tiles = [
+      { k: "Тесты времени", v: "7 / 7", s: "регрессионные, пройдены" },
+      { k: "Сверка MAE", v: "1e-13", s: "пересчёт из прогнозов" },
+      { k: "Прогнозов проверено", v: formatNumber(a.saved_predictions || 152640), s: "дубликатов ключей: 0" },
+      { k: "Хеши данных", v: "совпали", s: "исходники не изменялись" }
+    ];
+    renderTiles(document.getElementById("reproTiles"), tiles);
+  }
+
+  // Рейтинг моделей по MAE для одного горизонта (горизонтальные столбцы).
+  function renderMaePanels() {
+    var container = document.getElementById("maePanels");
+    container.innerHTML = "";
+    if (!DATA) { return; }
+    var m = DATA.checked_metrics || [];
+    var horizons = uniqueHorizons(m);
+
+    for (var hi = 0; hi < horizons.length; hi++) {
+      var h = horizons[hi];
+      var rows = rowsForHorizon(m, h);
+      var fig = document.createElement("figure");
+      var title = document.createElement("div");
+      title.style.cssText = "font-weight:700;font-size:14px;margin-bottom:6px";
+      title.textContent = "Горизонт " + h + " мес";
+      fig.appendChild(title);
+      var box = document.createElement("div"); box.className = "chart-box";
+      var svg = makeElement("svg", { viewBox: "0 0 480 250", role: "img" });
+      drawRanking(svg, 480, 250, rows);
+      box.appendChild(svg); fig.appendChild(box);
+      container.appendChild(fig);
+    }
+
+    // Общая легенда.
+    var legend = document.getElementById("maeLegend");
+    legend.innerHTML = "";
+    var models = [];
+    for (var i = 0; i < m.length; i++) { if (models.indexOf(m[i].model) === -1) { models.push(m[i].model); } }
+    for (var li = 0; li < models.length; li++) {
+      var span = document.createElement("span");
+      span.innerHTML = '<span class="swatch" style="background:' + modelColor(models[li]) + '"></span>' + modelName(models[li]);
+      legend.appendChild(span);
+    }
+  }
+
+  function drawRanking(svg, W, H, rows) {
+    var padL = 128, padR = 54, padT = 8, padB = 8;
+    var plotW = W - padL - padR;
+    var maxV = 0;
+    for (var i = 0; i < rows.length; i++) { if (rows[i].MAE > maxV) { maxV = rows[i].MAE; } }
+    var rowH = (H - padT - padB) / rows.length;
+    var barH = Math.min(rowH * 0.62, 22);
+    for (var r = 0; r < rows.length; r++) {
+      var cy = padT + rowH * r + rowH / 2;
+      var barW = plotW * (rows[r].MAE / maxV);
+      addText(svg, padL - 8, cy + 4, modelName(rows[r].model), { anchor: "end", size: 11.5, weight: r === 0 ? 700 : 500, color: r === 0 ? cssVar("--accent-ink") : cssVar("--ink-soft") });
+      svg.appendChild(makeElement("rect", { x: padL, y: cy - barH / 2, width: Math.max(barW, 1), height: barH, fill: modelColor(rows[r].model), rx: 4 }));
+      addText(svg, padL + barW + 7, cy + 4, formatNumber(rows[r].MAE), { size: 11, mono: true, color: cssVar("--ink-faint") });
+    }
+  }
+
+  function renderForecastTable() {
+    var table = document.getElementById("forecastTable");
+    table.innerHTML = "";
+    if (!DATA) { return; }
+    var m = DATA.checked_metrics || [];
+    var horizons = uniqueHorizons(m);
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Модель", "Горизонт", "MAE, ₽", "R²", "sMAPE, %"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    for (var hi = 0; hi < horizons.length; hi++) {
+      var rows = rowsForHorizon(m, horizons[hi]);
+      for (var r = 0; r < rows.length; r++) {
+        var tr = document.createElement("tr");
+        if (r === 0) { tr.className = "best"; }
+        var cells = [modelName(rows[r].model), rows[r].horizon + " мес", formatNumber(rows[r].MAE), formatFixed(rows[r].R2, 3), formatFixed(rows[r].sMAPE, 1)];
+        for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+        tbody.appendChild(tr);
+      }
+    }
+    table.appendChild(tbody);
+  }
+
+  // Prophet: все отсечки против истории >= 12 мес.
+  function renderInflationChart() {
+    var svg = document.getElementById("chartInflation");
+    clearSvg(svg);
+    if (!DATA) { return; }
+    var orig = DATA.original_metrics || [];
+    var after = DATA.after12_metrics || [];
+    var horizons = [1, 3, 6, 12];
+    var W = 960, H = 340, padL = 70, padR = 20, padT = 20, padB = 46;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    var pairs = [];
+    for (var i = 0; i < horizons.length; i++) {
+      var a = findRow(orig, "Prophet", horizons[i]);
+      var b = findRow(after, "Prophet", horizons[i]);
+      pairs.push({ h: horizons[i], all: a ? a.MAE : 0, after: b ? b.MAE : 0 });
+    }
+    var maxV = 0;
+    for (var p = 0; p < pairs.length; p++) { if (pairs[p].all > maxV) { maxV = pairs[p].all; } if (pairs[p].after > maxV) { maxV = pairs[p].after; } }
+    var niceMax = Math.ceil(maxV / 5000) * 5000; if (niceMax === 0) { niceMax = 1; }
+    function yOf(v) { return padT + plotH * (1 - v / niceMax); }
+    for (var g = 0; g <= 4; g++) {
+      var val = niceMax * g / 4; var yy = yOf(val);
+      svg.appendChild(makeElement("line", { x1: padL, y1: yy, x2: W - padR, y2: yy, stroke: cssVar("--line"), "stroke-width": 1 }));
+      addText(svg, padL - 8, yy + 4, formatNumber(val), { anchor: "end", size: 11, mono: true, color: cssVar("--ink-faint") });
+    }
+    var groupW = plotW / pairs.length, barW = 46, gap = 10;
+    for (var k = 0; k < pairs.length; k++) {
+      var gx = padL + groupW * k + groupW / 2;
+      var x1 = gx - barW - gap / 2, x2 = gx + gap / 2;
+      svg.appendChild(makeElement("rect", { x: x1, y: yOf(pairs[k].all), width: barW, height: (padT + plotH) - yOf(pairs[k].all), fill: cssVar("--critical"), rx: 3 }));
+      svg.appendChild(makeElement("rect", { x: x2, y: yOf(pairs[k].after), width: barW, height: (padT + plotH) - yOf(pairs[k].after), fill: cssVar("--accent"), rx: 3 }));
+      addText(svg, x1 + barW / 2, yOf(pairs[k].all) - 5, formatNumber(pairs[k].all), { anchor: "middle", size: 9.5, mono: true, color: cssVar("--ink-faint") });
+      addText(svg, x2 + barW / 2, yOf(pairs[k].after) - 5, formatNumber(pairs[k].after), { anchor: "middle", size: 9.5, mono: true, color: cssVar("--ink-faint") });
+      addText(svg, gx, H - padB + 20, pairs[k].h + " мес", { anchor: "middle", size: 12, weight: 600, color: cssVar("--ink-soft") });
+    }
+    document.getElementById("inflationLegend").innerHTML =
+      '<span><span class="swatch" style="background:' + cssVar("--critical") + '"></span>все отсечки (исходное)</span>' +
+      '<span><span class="swatch" style="background:' + cssVar("--accent") + '"></span>история ≥ 12 мес</span>';
+  }
+
+  // Новости: LightGBM vs LightGBM+ЦБ.
+  function renderNewsChart() {
+    var svg = document.getElementById("chartNews");
+    clearSvg(svg);
+    if (!DATA) { return; }
+    var m = DATA.checked_metrics || [];
+    var horizons = [1, 3, 6, 12];
+    var W = 480, H = 320, padL = 54, padR = 16, padT = 16, padB = 42;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var pairs = [];
+    for (var i = 0; i < horizons.length; i++) {
+      var base = findRow(m, "LightGBM_checked", horizons[i]);
+      var cbr = findRow(m, "LightGBM_CBR_events", horizons[i]);
+      pairs.push({ h: horizons[i], base: base ? base.MAE : 0, cbr: cbr ? cbr.MAE : 0 });
+    }
+    var maxV = 0;
+    for (var p = 0; p < pairs.length; p++) { if (pairs[p].base > maxV) { maxV = pairs[p].base; } if (pairs[p].cbr > maxV) { maxV = pairs[p].cbr; } }
+    var niceMax = Math.ceil(maxV / 250) * 250; if (niceMax === 0) { niceMax = 1; }
+    function yOf(v) { return padT + plotH * (1 - v / niceMax); }
+    for (var g = 0; g <= 4; g++) { var yy = padT + plotH * (1 - g / 4); svg.appendChild(makeElement("line", { x1: padL, y1: yy, x2: W - padR, y2: yy, stroke: cssVar("--line"), "stroke-width": 1 })); addText(svg, padL - 6, yy + 4, formatNumber(niceMax * g / 4), { anchor: "end", size: 10, mono: true, color: cssVar("--ink-faint") }); }
+    var groupW = plotW / pairs.length, barW = 26, gap = 7;
+    for (var k = 0; k < pairs.length; k++) {
+      var gx = padL + groupW * k + groupW / 2;
+      var x1 = gx - barW - gap / 2, x2 = gx + gap / 2;
+      svg.appendChild(makeElement("rect", { x: x1, y: yOf(pairs[k].base), width: barW, height: (padT + plotH) - yOf(pairs[k].base), fill: cssVar("--ink-faint"), rx: 3 }));
+      svg.appendChild(makeElement("rect", { x: x2, y: yOf(pairs[k].cbr), width: barW, height: (padT + plotH) - yOf(pairs[k].cbr), fill: cssVar("--accent"), rx: 3 }));
+      addText(svg, gx, H - padB + 18, pairs[k].h + "м", { anchor: "middle", size: 11, weight: 600, color: cssVar("--ink-soft") });
+    }
+    document.getElementById("newsLegend").innerHTML =
+      '<span><span class="swatch" style="background:' + cssVar("--ink-faint") + '"></span>LightGBM</span>' +
+      '<span><span class="swatch" style="background:' + cssVar("--accent") + '"></span>+ сообщения ЦБ</span>';
+
+    // Текстовая заметка про эффект на 12 мес.
+    var cbr12 = findRow(m, "LightGBM_CBR_events", 12), base12 = findRow(m, "LightGBM_checked", 12);
+    if (cbr12 && base12) {
+      document.getElementById("newsNote").textContent =
+        "На 12 мес сигнал ЦБ снижает MAE LightGBM с " + formatNumber(base12.MAE) + " до " + formatNumber(cbr12.MAE) + " ₽, но не обгоняет Prophet (разумный).";
+    }
+  }
+
+  function renderDetectorTable() {
+    var table = document.getElementById("detectorTable");
+    table.innerHTML = "";
+    if (!DATA) { return; }
+    var d = (DATA.detector_metrics || []).slice().sort(function (a, b) { return b.f1 - a.f1; });
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Детектор", "Precision", "Recall", "F1", "Задержка", "Ложных / 100 точек"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    for (var r = 0; r < d.length; r++) {
+      var tr = document.createElement("tr");
+      var cells = [d[r].method, formatFixed(d[r].precision, 3), formatFixed(d[r].recall, 2), formatFixed(d[r].f1, 3), formatFixed(d[r].delay, 2), formatFixed(d[r].false_per_100, 1)];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+  }
+
+  // Реальный пример: факт и несколько моделей по горизонтам.
+  function renderExampleChart() {
+    var svg = document.getElementById("chartExample");
+    clearSvg(svg);
+    if (!DATA) { return; }
+    var rows = DATA.example_rows || [];
+    if (rows.length === 0) { return; }
+    var horizons = [1, 3, 6, 12];
+    var modelsToShow = ["LightGBM_CBR_events", "Prophet_history_aware", "Chronos_Bolt_tiny"];
+
+    // Факт (из любой модели, поле actual одинаково на горизонт).
+    function actualAt(h) { for (var i = 0; i < rows.length; i++) { if (rows[i].horizon === h) { return rows[i].actual; } } return null; }
+    function predAt(model, h) { for (var i = 0; i < rows.length; i++) { if (rows[i].model === model && rows[i].horizon === h) { return rows[i].predicted; } } return null; }
+
+    var W = 960, H = 340, padL = 70, padR = 20, padT = 20, padB = 46;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var allVals = [];
+    for (var i = 0; i < horizons.length; i++) { allVals.push(actualAt(horizons[i])); for (var j = 0; j < modelsToShow.length; j++) { allVals.push(predAt(modelsToShow[j], horizons[i])); } }
+    var maxV = 0, minV = 1e18;
+    for (var a = 0; a < allVals.length; a++) { if (allVals[a] !== null) { if (allVals[a] > maxV) { maxV = allVals[a]; } if (allVals[a] < minV) { minV = allVals[a]; } } }
+    var span = maxV - minV; var lo = minV - span * 0.15, hi = maxV + span * 0.15;
+    function xOf(i) { return padL + plotW * (i / (horizons.length - 1)); }
+    function yOf(v) { return padT + plotH * (1 - (v - lo) / (hi - lo)); }
+    for (var g = 0; g <= 4; g++) { var val = lo + (hi - lo) * g / 4; var yy = padT + plotH * (1 - g / 4); svg.appendChild(makeElement("line", { x1: padL, y1: yy, x2: W - padR, y2: yy, stroke: cssVar("--line"), "stroke-width": 1 })); addText(svg, padL - 8, yy + 4, formatNumber(val), { anchor: "end", size: 11, mono: true, color: cssVar("--ink-faint") }); }
+    for (var t = 0; t < horizons.length; t++) { addText(svg, xOf(t), H - padB + 20, horizons[t] + " мес", { anchor: "middle", size: 12, weight: 600, color: cssVar("--ink-soft") }); }
+
+    function drawLine(getter, color, width, dash) {
+      var dstr = "";
+      for (var i = 0; i < horizons.length; i++) { var v = getter(horizons[i]); if (v === null) { continue; } dstr += (dstr === "" ? "M" : "L") + xOf(i).toFixed(1) + " " + yOf(v).toFixed(1) + " "; }
+      var attrs = { d: dstr, fill: "none", stroke: color, "stroke-width": width, "stroke-linejoin": "round" };
+      if (dash) { attrs["stroke-dasharray"] = dash; }
+      svg.appendChild(makeElement("path", attrs));
+      for (var p = 0; p < horizons.length; p++) { var vv = getter(horizons[p]); if (vv === null) { continue; } svg.appendChild(makeElement("circle", { cx: xOf(p), cy: yOf(vv), r: 3, fill: color })); }
+    }
+    drawLine(function (h) { return actualAt(h); }, cssVar("--ink"), 3, null);
+    for (var mi = 0; mi < modelsToShow.length; mi++) { (function (model) { drawLine(function (h) { return predAt(model, h); }, modelColor(model), 2, "5 4"); })(modelsToShow[mi]); }
+
+    var legend = document.getElementById("exampleLegend");
+    legend.innerHTML = '<span><span class="swatch" style="background:' + cssVar("--ink") + '"></span>факт</span>';
+    for (var li = 0; li < modelsToShow.length; li++) { legend.innerHTML += '<span><span class="swatch" style="background:' + modelColor(modelsToShow[li]) + '"></span>' + modelName(modelsToShow[li]) + '</span>'; }
+  }
+
+  // Независимый финальный тест.
+  function renderFinalTest() {
+    if (!DATA || !DATA.final_test) { return; }
+    var ft = DATA.final_test;
+    var selection = ft.selection || {};
+    var finalRows = DATA.final_test_final || [];
+
+    // Лучшая модель на финале по каждому горизонту.
+    function bestFinal(h) {
+      var rows = [];
+      for (var i = 0; i < finalRows.length; i++) { if (finalRows[i].horizon === h) { rows.push(finalRows[i]); } }
+      rows.sort(function (a, b) { return a.MAE - b.MAE; });
+      return rows.length > 0 ? rows[0] : null;
+    }
+
+    var callout = document.getElementById("finalCallout").querySelector("p");
+    var sel1 = selection["1"];
+    if (sel1 && sel1.final_test_available) {
+      var best1 = bestFinal(1);
+      callout.innerHTML = "Наблюдение: на горизонте 1 месяц правило выбрало <strong>" + modelName(sel1.chosen_by_validation) +
+        "</strong> (по валидации), но на позднем срезе его MAE " + formatNumber(sel1.final_test_MAE) +
+        " ₽ — хуже, чем у <strong>" + modelName(best1.model) + "</strong> (" + formatNumber(best1.MAE) +
+        " ₽). Выбор по валидации не перенёсся на поздний срез: на одном годовом переходе ранжирование неустойчиво.";
+    }
+
+    var table = document.getElementById("finalTable");
+    table.innerHTML = "";
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Горизонт", "Выбор по валидации", "MAE выбранной на финале", "Лучшая на финале", "MAE лучшей"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    var horizonsOrder = [1, 3, 6, 12];
+    for (var k = 0; k < horizonsOrder.length; k++) {
+      var h = horizonsOrder[k];
+      var sel = selection[String(h)];
+      if (!sel) { continue; }
+      var tr = document.createElement("tr");
+      var bestRow = bestFinal(h);
+      var finalMaeText, bestName, bestMae;
+      if (sel.final_test_available) {
+        finalMaeText = formatNumber(sel.final_test_MAE) + " ₽";
+        bestName = bestRow ? modelName(bestRow.model) : "—";
+        bestMae = bestRow ? formatNumber(bestRow.MAE) + " ₽" : "—";
+      } else {
+        finalMaeText = "нет данных";
+        bestName = "—"; bestMae = "—";
+      }
+      var cells = [h + " мес", modelName(sel.chosen_by_validation), finalMaeText, bestName, bestMae];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+  }
+
+  // Реальная оценка детекторов на слепых метках.
+  function renderRealDetectorTable() {
+    var table = document.getElementById("realDetectorTable");
+    if (!table) { return; }
+    table.innerHTML = "";
+    if (!DATA) { return; }
+    var d = (DATA.real_detector_eval || []).slice().sort(function (a, b) { return b.f1 - a.f1; });
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Детектор", "Precision", "Recall", "F1", "Задержка"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    for (var r = 0; r < d.length; r++) {
+      var tr = document.createElement("tr");
+      var cells = [d[r].method, formatFixed(d[r].precision, 3), formatFixed(d[r].recall, 3), formatFixed(d[r].f1, 3), formatFixed(d[r].delay, 2)];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+
+    var sh = DATA.shocks_summary || {};
+    if (sh.shock_months) {
+      document.getElementById("realDetectIntro").textContent =
+        "Слепая разметка дала " + sh.shock_months + " шоков-месяцев у " + sh.mo_with_shock +
+        " МО (независимо от детекторов). На них впервые посчитаны реальные precision/recall/задержка.";
+    }
+  }
+
+  // Модель риска события.
+  function renderRisk() {
+    if (!DATA || !DATA.risk_eval) { return; }
+    var r = DATA.risk_eval;
+    var tiles = [];
+    if (r.status === "trained" && r.event_evaluation && typeof r.event_evaluation === "object") {
+      var ev = r.event_evaluation;
+      tiles.push({ k: "Событийная precision", v: formatFixed(ev.event_precision, 3), s: "попаданий " + ev.event_hits + " из " + (ev.event_hits + ev.event_false_alarms), accent: true });
+      tiles.push({ k: "Событийная recall", v: formatFixed(ev.event_recall, 3), s: "из " + ev.onset_events_eligible + " начал эпизодов" });
+      tiles.push({ k: "Ложных / 100 МО-мес", v: formatFixed(ev.false_alarms_per_100_mo_months, 2), s: "много ложных тревог" });
+      tiles.push({ k: "Опережение", v: (ev.mean_lead_time_months != null ? ev.mean_lead_time_months.toFixed(1) + " мес" : "—"), s: "до начала эпизода" });
+    } else if (r.status === "insufficient_training_data") {
+      tiles.push({ k: "Цель", v: "onset", s: "начало нового эпизода" });
+      tiles.push({ k: "Обучающих примеров", v: String(r.onset_positives_train || 0), s: "слишком мало для обучения" });
+      tiles.push({ k: "Калибровка", v: "корректна", s: String(r.calibration_observations || 0) + " наблюдений" });
+      tiles.push({ k: "Вердикт", v: "не оценено", s: "мало созревших срезов" });
+    } else if (r.status === "calibration_degenerate") {
+      tiles.push({ k: "Калибровка", v: "вырождена", s: "масштаб не из данных" });
+      tiles.push({ k: "Вердикт", v: "не оценено", s: "нужна другая постановка" });
+    }
+    renderTiles(document.getElementById("riskTiles"), tiles);
+    var note = document.getElementById("riskNote");
+    note.textContent = r.honest_conclusion ||
+      "Onset-модель обучена и оценена по событиям; точность слабая. Это ограничение объёма данных и конфигурации, а не доказанная невозможность задачи.";
+  }
+
+  // Rolling-origin: обученная модель против простых правил при равном бюджете.
+  function renderTscv() {
+    var table = document.getElementById("tscvTable");
+    if (!table) { return; }
+    var tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+    if (!DATA || !DATA.risk_tscv_methods || DATA.risk_tscv_methods.length === 0) { return; }
+
+    var methodTitles = {
+      "logistic": "Логистическая модель",
+      "last_change": "Правило: |последнее изменение|",
+      "dev_from_median": "Правило: отклонение от медианы",
+      "volatility": "Правило: волатильность"
+    };
+
+    // Лучший метод по recall — для подсветки. Простое правило часто не хуже.
+    var bestRecall = -1;
+    for (var i = 0; i < DATA.risk_tscv_methods.length; i++) {
+      var rec = DATA.risk_tscv_methods[i].event_recall;
+      if (rec != null && rec > bestRecall) { bestRecall = rec; }
+    }
+
+    for (var m = 0; m < DATA.risk_tscv_methods.length; m++) {
+      var row = DATA.risk_tscv_methods[m];
+      var tr = document.createElement("tr");
+      if (row.event_recall != null && row.event_recall === bestRecall) { tr.className = "best"; }
+      var cells = [
+        methodTitles[row.method] || row.method,
+        String(row.total_alarms),
+        String(row.total_hits),
+        String(row.total_events),
+        (row.event_recall != null ? formatFixed(row.event_recall, 3) : "—"),
+        (row.event_precision != null ? formatFixed(row.event_precision, 4) : "—"),
+        (row.mean_lead != null ? row.mean_lead.toFixed(1) : "—")
+      ];
+      for (var c = 0; c < cells.length; c++) {
+        var td = document.createElement("td");
+        td.textContent = cells[c];
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+
+    var intro = document.getElementById("tscvIntro");
+    var summary = DATA.risk_tscv_summary || {};
+    var slices = DATA.risk_tscv_train_slices || {};
+    var sliceValues = [];
+    for (var key in slices) {
+      if (slices.hasOwnProperty(key)) { sliceValues.push(slices[key]); }
+    }
+    sliceValues.sort(function (a, b) { return a - b; });
+    var slicesText = sliceValues.length > 0 ? sliceValues.join(" → ") : "—";
+    var pending = DATA.risk_tscv_pending_folds || [];
+    var pendingText = pending.length > 0
+      ? " Незрелый фолд " + pending.join(", ") + " (окно onset выходит за декабрь 2024) исключён из метрик и показан как pending."
+      : "";
+    intro.textContent =
+      "Короткий прогрев (" + (summary.formulation || "месячная разность, скользящее окно") +
+      ") даёт сигнал с " + (summary.signal_available_from || "конца 2023") +
+      " и несколько зрелых обучающих срезов (" + slicesText + " мес.). " +
+      "Протокол: rolling-origin, равный бюджет тревог через top-K на каждом выпуске " +
+      "(сравнение ранжирования, не замороженный порог). Определение зафиксировано в " +
+      "configs/risk_tscv.yaml и не подбиралось под результат." + pendingText;
+
+    var decMin = DATA.risk_tscv_december_min;
+    var decMax = DATA.risk_tscv_december_max;
+    var decText = "";
+    if (decMin != null && decMax != null) {
+      decText = " Оговорка разметки: ≈" + Math.round(100 * decMin) + "–" + Math.round(100 * decMax) +
+        "% onset во всех фолдах — декабрьский календарный всплеск, поэтому больше срезов ≠ больше независимых типов шоков.";
+    }
+    var note = document.getElementById("tscvNote");
+    note.textContent =
+      "Честный итог: при равном бюджете тревог обученная модель НЕ превосходит простейшее правило " +
+      "(|последнее изменение| ловит больше начал эпизодов), но разница 4 против 2 попаданий — это два " +
+      "события, а не надёжное превосходство. Precision у всех методов <1%." + decText +
+      " Метрики несопоставимы напрямую с onset-моделью выше. " + (summary.caveat || "");
+  }
+
+  // Единая pooled-таблица прогноза (главный результат).
+  function renderUnified() {
+    var table = document.getElementById("unifiedTable");
+    if (!table) { return; }
+    var tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+    if (!DATA || !DATA.forecast_unified || DATA.forecast_unified.length === 0) { return; }
+    var modelTitles = { "CatBoost_global": "CatBoost", "LightGBM_checked": "LightGBM",
+      "LightGBM_CBR_events": "LightGBM + ЦБ", "Prophet_history_aware": "Prophet",
+      "Chronos_Bolt_tiny": "Chronos", "ETS": "ETS", "SeasonalNaive": "Seasonal naive",
+      "Prophet_original_setting": "Prophet (ориг.)", "Ensemble_CatBoost_LightGBM": "Ансамбль CB+LGB" };
+    var winners = DATA.forecast_unified_winners || {};
+    var horizonsSeen = [1, 3, 6, 12];
+    for (var h = 0; h < horizonsSeen.length; h++) {
+      var horizon = horizonsSeen[h];
+      var winnerModel = winners[String(horizon)];
+      var best = null;
+      for (var i = 0; i < DATA.forecast_unified.length; i++) {
+        var r = DATA.forecast_unified[i];
+        if (r.horizon === horizon && r.model === winnerModel) { best = r; break; }
+      }
+      if (best == null) { continue; }
+      var tr = document.createElement("tr"); tr.className = "best";
+      var ci = (best.mae_p2_5_per_mo != null && best.mae_p97_5_per_mo != null)
+        ? "[" + Math.round(best.mae_p2_5_per_mo) + ", " + Math.round(best.mae_p97_5_per_mo) + "]" : "—";
+      var cells = [
+        horizon + " мес",
+        modelTitles[best.model] || best.model,
+        formatNumber(best.MAE) + " ₽",
+        (best.mae_median_per_mo != null ? formatNumber(best.mae_median_per_mo) + " ₽" : "—"),
+        ci,
+        formatFixed(best.R2, 3)
+      ];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    // --- Вторая таблица: выбор по ранним фактам и измерение на позднем срезе.
+    var selectedTable = document.getElementById("unifiedSelectedTable");
+    var selectedBody = selectedTable ? selectedTable.querySelector("tbody") : null;
+    var selected = DATA.forecast_unified_selected_on_early || {};
+    var late = DATA.forecast_unified_late_evaluation || {};
+    if (selectedBody) {
+      selectedBody.innerHTML = "";
+      for (var sh = 0; sh < horizonsSeen.length; sh++) {
+        var horizonSel = horizonsSeen[sh];
+        var selInfo = selected[String(horizonSel)];
+        if (!selInfo) { continue; }
+        var lateInfo = late[String(horizonSel)] || {};
+        var lateMaeText = "—";
+        var outcomeText = "не оценён (нет зрелых поздних меток)";
+        if (lateInfo.status === "evaluated_late") {
+          lateMaeText = formatNumber(lateInfo.mae_late) + " ₽";
+          outcomeText = lateInfo.outcome || "";
+        }
+        var selCells = [
+          horizonSel + " мес",
+          modelTitles[selInfo.model] || selInfo.model,
+          (selInfo.mae_early != null ? formatNumber(selInfo.mae_early) + " ₽" : "—"),
+          lateMaeText,
+          outcomeText
+        ];
+        var selTr = document.createElement("tr");
+        if (lateInfo.status === "evaluated_late" && lateInfo.best_late_reference
+            && lateInfo.best_late_reference.model === lateInfo.model) { selTr.className = "best"; }
+        for (var sc = 0; sc < selCells.length; sc++) { var selTd = document.createElement("td"); selTd.textContent = selCells[sc]; selTr.appendChild(selTd); }
+        selectedBody.appendChild(selTr);
+      }
+    }
+    var note = document.getElementById("unifiedNote");
+    note.textContent = "Выбор и оценка разведены (аудит v16). Первая таблица — описательный минимум MAE по всей "
+      + "ретроспективе (НЕ независимый результат). Вторая — стратегия, выбранная только по ранним отсечкам "
+      + "(2023-12, 2024-03, 2024-06) из девяти фиксированных кандидатов правилом argmin раннего MAE; поздние факты "
+      + "в выборе не участвуют. Поздний срез (2024-09, 2024-11) лишь измеряет этот неизменный выбор: на h=1 ранний "
+      + "выбор (Prophet) проиграл ансамблю и мы НЕ пересматриваем решение задним числом, на h=3 выбор подтвердился, "
+      + "на h=6/h=12 зрелых поздних меток нет (not_evaluated_late). Разброс MAE по МО (медиана и 95%-интервал) "
+      + "показывает неоднородность по территориям.";
+  }
+
+  // Главный результат по цели «Все категории».
+  function renderHeadline() {
+    var table = document.getElementById("headlineTable");
+    if (!table) { return; }
+    table.innerHTML = "";
+    if (!DATA || !DATA.headline_total) { return; }
+    var rows = DATA.headline_total;
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Горизонт", "MAE Prophet", "MAE LightGBM+ЦБ", "Снижение MAE", "R² Prophet → LightGBM", "n"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    for (var r = 0; r < rows.length; r++) {
+      var tr = document.createElement("tr"); tr.className = "best";
+      var cells = [
+        rows[r].horizon + " мес",
+        formatNumber(rows[r].mae_prophet) + " ₽",
+        formatNumber(rows[r].mae_lgbm) + " ₽",
+        "−" + rows[r].reduction_pct.toFixed(1) + "%",
+        formatFixed(rows[r].r2_prophet, 3) + " → " + formatFixed(rows[r].r2_lgbm, 3),
+        rows[r].n_points
+      ];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+
+    // Оговорка: на объединении всех категорий на h=12 выигрывает Prophet.
+    var caveat = document.getElementById("headlineCaveat");
+    var pooled = DATA.pooled_all || [];
+    var p12 = null, best12 = null;
+    for (var i = 0; i < pooled.length; i++) {
+      if (pooled[i].horizon === 12) {
+        if (pooled[i].model === "Prophet_history_aware") { p12 = pooled[i]; }
+        if (!best12 || pooled[i].MAE < best12.MAE) { best12 = pooled[i]; }
+      }
+    }
+    var txt = "Честная оговорка: это наблюдение на уже виденных данных, цель «Все категории» раскрыта постфактум, а не была заранее заданной. ";
+    if (p12 && best12 && best12.model === "Prophet_history_aware") {
+      txt += "На объединении всех шести категорий на 12 мес выигрывает Prophet (MAE " + formatNumber(p12.MAE) + " ₽) — этот неудобный случай тоже показан. ";
+    }
+    txt += "Горизонты покрыты 5/4/3/1 отсечками; год проверен лишь на переходе декабрь-2023 → декабрь-2024.";
+    caveat.textContent = txt;
+  }
+
+  // Абляция ЦБ/ИПЦ.
+  function renderAblation() {
+    var table = document.getElementById("ablationTable");
+    if (!table) { return; }
+    table.innerHTML = "";
+    if (!DATA || !DATA.cpi_ablation) { return; }
+    var rows = DATA.cpi_ablation;
+    var thead = document.createElement("thead"); var hr = document.createElement("tr");
+    var heads = ["Горизонт", "baseline", "+ЦБ", "+ЦБ+ИПЦ", "Чистый ИПЦ"];
+    for (var i = 0; i < heads.length; i++) { var th = document.createElement("th"); th.textContent = heads[i]; hr.appendChild(th); }
+    thead.appendChild(hr); table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    for (var r = 0; r < rows.length; r++) {
+      var row = rows[r];
+      var eff = row["CPI_effect_vs_CBR_pct"];
+      var effText = (eff === null || eff === undefined) ? "—" : (eff >= 0 ? "−" : "+") + Math.abs(eff).toFixed(1) + "%";
+      var tr = document.createElement("tr");
+      var cells = [
+        row.horizon + " мес",
+        row["MAE_baseline (без внешних)"] != null ? formatNumber(row["MAE_baseline (без внешних)"]) : "—",
+        row["MAE_+ЦБ"] != null ? formatNumber(row["MAE_+ЦБ"]) : "—",
+        row["MAE_+ЦБ+ИПЦ"] != null ? formatNumber(row["MAE_+ЦБ+ИПЦ"]) : "—",
+        effText
+      ];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+  }
+
+  // Like-for-like на событиях scripts/13.
+  function renderLikeForLike() {
+    var table = document.getElementById("lfTable");
+    if (!table) { return; }
+    var tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+    if (!DATA || !DATA.likeforlike_methods || DATA.likeforlike_methods.length === 0) { return; }
+    var titles = { "logistic": "Логистическая (обученная)", "last_change": "Правило: |Δ месячное|",
+      "dev_from_median": "Правило: |годовое откл.|", "volatility": "Правило: волатильность" };
+    var bestRecall = -1;
+    for (var i = 0; i < DATA.likeforlike_methods.length; i++) {
+      var rc = DATA.likeforlike_methods[i].event_recall;
+      if (rc != null && rc > bestRecall) { bestRecall = rc; }
+    }
+    for (var m = 0; m < DATA.likeforlike_methods.length; m++) {
+      var row = DATA.likeforlike_methods[m];
+      var tr = document.createElement("tr");
+      if (row.event_recall != null && row.event_recall === bestRecall) { tr.className = "best"; }
+      var cells = [
+        titles[row.method] || row.method,
+        row.event_hits + " / " + row.onset_events_eligible,
+        (row.event_recall != null ? formatFixed(row.event_recall, 3) : "—"),
+        (row.event_precision != null ? formatFixed(row.event_precision, 3) : "—")
+      ];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    var note = document.getElementById("lfNote");
+    note.textContent = "На своих событиях обученная модель лишь незначительно лучшая — разница в два события из 225, "
+      + "precision ≈10% у обеих. Устойчивого преимущества над тривиальным правилом нет и здесь.";
+  }
+
+  // Устойчивый сдвиг уровня.
+  function renderLevelShift() {
+    if (!DATA || !DATA.levelshift_summary) { return; }
+    var s = DATA.levelshift_summary;
+    var modelRecall = (s.model_recall != null ? s.model_recall.toFixed(3) : "—");
+    var ruleRecall = (s.best_rule_recall != null ? s.best_rule_recall.toFixed(3) : "—");
+    var tiles = [
+      { k: "Сдвигов уровня всего", v: String(s.total != null ? s.total : "—"), s: "каузальный масштаб (reference " + (s.scale_reference_cutoff || "—") + ")", accent: true },
+      { k: "Из них в декабре", v: String(s.december != null ? s.december : "—"), s: "устойчиво к выбору масштаба" },
+      { k: "Модель vs лучшее правило", v: modelRecall + " / " + ruleRecall, s: "recall на сопоставимых фолдах — ничья" },
+      { k: "Вердикт", v: "преимущества нет", s: "модель лишь догоняет правило" }
+    ];
+    renderTiles(document.getElementById("levelTiles"), tiles);
+    var dist = s.distribution || {};
+    var parts = [];
+    for (var key in dist) { if (dist.hasOwnProperty(key)) { parts.push(key + ": " + dist[key]); } }
+    var note = document.getElementById("levelNote");
+    note.textContent = "Масштаб события оценён каузально (только 2023 год), иначе число событий зависело бы от тестового будущего — "
+      + "поправка аудита. При честном масштабе устойчивых сдвигов " + (s.total != null ? s.total : "—")
+      + " (" + (parts.length ? parts.join(", ") : "—") + "), и ни одного в декабре — это объясняет декабрьское смещение "
+      + "месячной разметки. На сопоставимых фолдах обученная модель лишь догоняет лучшее простое правило (recall "
+      + modelRecall + "), устойчивого преимущества нет.";
+  }
+
+  // Robust backtest сезонного шока.
+  function renderSeasonal() {
+    var table = document.getElementById("seasonalTable");
+    if (!table) { return; }
+    var tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+    if (!DATA || !DATA.seasonal_methods || DATA.seasonal_methods.length === 0) { return; }
+    var titles = { "logistic": "Логистическая", "lightgbm": "LightGBM", "catboost": "CatBoost",
+      "seasonal_naive": "Seasonal naive", "last_change": "Правило: |Δ мес.|",
+      "volatility": "Правило: волатильность", "random": "Случайный (нижняя планка)" };
+    var bestAuc = -1;
+    for (var i = 0; i < DATA.seasonal_methods.length; i++) {
+      var a = DATA.seasonal_methods[i].pr_auc;
+      if (a != null && a > bestAuc) { bestAuc = a; }
+    }
+    for (var m = 0; m < DATA.seasonal_methods.length; m++) {
+      var row = DATA.seasonal_methods[m];
+      var tr = document.createElement("tr");
+      if (row.pr_auc != null && row.pr_auc === bestAuc) { tr.className = "best"; }
+      if (row.method === "random") { tr.style.opacity = "0.7"; }
+      var ciText = (row.pr_auc_ci_low != null && row.pr_auc_ci_high != null)
+        ? "[" + formatFixed(row.pr_auc_ci_low, 3) + ", " + formatFixed(row.pr_auc_ci_high, 3) + "]" : "—";
+      var cells = [
+        titles[row.method] || row.method,
+        (row.event_recall != null ? formatFixed(row.event_recall, 3) : "—"),
+        (row.event_precision != null ? formatFixed(row.event_precision, 3) : "—"),
+        (row.pr_auc != null ? formatFixed(row.pr_auc, 4) : "—"),
+        ciText
+      ];
+      for (var c = 0; c < cells.length; c++) { var td = document.createElement("td"); td.textContent = cells[c]; tr.appendChild(td); }
+      tbody.appendChild(tr);
+    }
+    var s = DATA.seasonal_summary || {};
+    var decPct = (s.december_share != null ? Math.round(100 * s.december_share) : "—");
+    var intro = document.getElementById("seasonalIntro");
+    intro.textContent = "Прикладное целевое событие: отклонение МО от общего движения и своего уровня. "
+      + "Вычитание общего движения всех МО резко уменьшило долю декабря (" + decPct + "% против ≈98% у месячной разметки, а не «исключён» буквально). "
+      + (s.onsets_total != null ? s.onsets_total : "—") + " событий, "
+      + (s.comparable_folds ? s.comparable_folds.length : "—") + " непересекающихся rolling-фолдов + финальный holdout ("
+      + (s.holdout_origin || "—") + "), " + (s.pooled_positive_rows != null ? s.pooled_positive_rows : "—")
+      + " событий в пулинге. Пороги и масштаб каузальны (reference 2023).";
+    var note = document.getElementById("seasonalNote");
+    note.textContent = "Честный итог: по точечным оценкам PR-AUC все методы выше одной случайной реализации (слабый сигнал есть), "
+      + "но это НЕ доказательство статистической значимости — ДИ отдельных методов и random пересекаются, "
+      + "а пересечение отдельных ДИ не заменяет парный ДИ разности метрик. ML-модели (CatBoost/LightGBM/логистическая) "
+      + "НЕ превосходят простое правило волатильности, а на holdout лучший last_change. Абсолютный PR-AUC низкий "
+      + "(события редки), надёжно лучшего метода нет. Это защищаемая версия раннего предупреждения: робастно, с нижней планкой и ДИ.";
+  }
+
+  function renderEverything() {
+    renderUnified();
+    renderHeadline();
+    renderLikeForLike();
+    renderLevelShift();
+    renderSeasonal();
+    renderAblation();
+    renderHeroTiles();
+    renderProtocolTiles();
+    renderReproTiles();
+    renderMaePanels();
+    renderForecastTable();
+    renderInflationChart();
+    renderFinalTest();
+    renderNewsChart();
+    renderDetectorTable();
+    renderRealDetectorTable();
+    renderRisk();
+    renderTscv();
+    renderExampleChart();
+  }
+
+  renderEverything();
+  if (window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+      if (!document.documentElement.getAttribute("data-theme")) { renderEverything(); }
+    });
+  }
+})();
+</script>

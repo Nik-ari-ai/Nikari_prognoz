@@ -1,0 +1,36 @@
+random_seed: 42
+sample_size: 120
+news_ablation: true
+origins:
+- 2023-12
+- 2024-03
+- 2024-06
+- 2024-09
+- 2024-11
+horizons:
+- 1
+- 3
+- 6
+- 12
+foundation:
+  enabled: false
+  name: amazon/chronos-bolt-tiny
+  revision: a0e552de83495b5c28c14c71c374f3e33280b340
+  batch_size: 64
+lightgbm:
+  n_estimators: 200
+  num_leaves: 31
+  learning_rate: 0.05
+  n_jobs: 4
+  random_state: 42
+  deterministic: true
+  force_col_wise: true
+detectors:
+  calibration_points: 12
+  threshold: 3.0
+  cusum_threshold: 5.0
+  cusum_drift: 0.5
+  ewma_alpha: 0.3
+  match_window: 6
+  test_seed: 1907
+  test_series: 200

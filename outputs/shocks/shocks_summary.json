@@ -1,0 +1,14 @@
+{
+  "full_history_mo": 2016,
+  "labeling_rule": "YoY лог-разность, центрирование по медиане МО, порог 3*робаст.сигма, длительность>=2",
+  "robust_sigma": 0.03488006153357659,
+  "extreme_months": 1444,
+  "shock_months": 705,
+  "shock_episodes_all": 284,
+  "shock_episodes_in_detector_window": 18,
+  "mo_with_shock": 273,
+  "total_mo_months": 24192,
+  "monitored_mo": 2016,
+  "recall_denominator": "эпизоды в зоне наблюдения детектора (старт >= калибровки)",
+  "note": "Метки — прокси, не истина. Recall считается по эпизодам в окне наблюдения, а не по всем месяцам года. Задержка >=0: детектор срабатывает после факта."
+}

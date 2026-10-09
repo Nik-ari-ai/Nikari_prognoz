@@ -1,0 +1,47 @@
+{
+  "nature": "Ретроспективное разбиение уже посчитанных прогнозов, НЕ нетронутый независимый тест.",
+  "why_not_independent": "Отсечки 2024-09 и 2024-11 уже были в прогнозах проверенного запуска и наблюдались ранее.",
+  "validation_cutoffs": [
+    "2023-12",
+    "2024-03",
+    "2024-06"
+  ],
+  "late_slice_cutoffs": [
+    "2024-09",
+    "2024-11"
+  ],
+  "compared_on": "общие ключи всех моделей (территория, категория, отсечка, горизонт)",
+  "selection_rule": "Минимальный средний MAE на ранних отсечках для каждого горизонта.",
+  "data_limitation": "История до 2024-12: на позднем срезе проверяемы h=1 (2024-09, 2024-11) и h=3 (2024-09).",
+  "needs_for_true_test": "Ещё один независимый год данных.",
+  "selection": {
+    "1": {
+      "chosen_by_validation": "Prophet_history_aware",
+      "validation_MAE": 688.0150401770362,
+      "final_test_MAE": 863.1841709021428,
+      "final_test_n": 1332,
+      "final_test_available": true
+    },
+    "3": {
+      "chosen_by_validation": "Prophet_history_aware",
+      "validation_MAE": 549.3626736840644,
+      "final_test_MAE": 1269.6611662819478,
+      "final_test_n": 666,
+      "final_test_available": true
+    },
+    "6": {
+      "chosen_by_validation": "LightGBM_checked",
+      "validation_MAE": 693.5396807154026,
+      "final_test_MAE": null,
+      "final_test_available": false,
+      "note": "На закрытом финале нет проверяемых фактов для этого горизонта (история заканчивается 2024-12)."
+    },
+    "12": {
+      "chosen_by_validation": "Prophet_history_aware",
+      "validation_MAE": 909.8993903401245,
+      "final_test_MAE": null,
+      "final_test_available": false,
+      "note": "На закрытом финале нет проверяемых фактов для этого горизонта (история заканчивается 2024-12)."
+    }
+  }
+}

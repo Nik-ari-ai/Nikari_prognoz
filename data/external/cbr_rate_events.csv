@@ -1,0 +1,9 @@
+published_at,event_date,scope,region_code,rate_change_pp,new_rate_pct,source_url,retrieved_at,source_status
+2023-07-21T13:30:00+03:00,2023-07-21,federal,0,1.0,8.5,https://www.cbr.ru/press/pr/?file=21072023_133000key.htm,2026-10-07T10:42:11.064652+00:00,HTTP 200; title and publication timestamp verified
+2023-08-15T10:30:00+03:00,2023-08-15,federal,0,3.5,12.0,https://www.cbr.ru/press/pr/?file=15082023_103000key.htm,2026-10-07T10:42:11.064712+00:00,HTTP 200; title and publication timestamp verified
+2023-09-15T13:30:00+03:00,2023-09-15,federal,0,1.0,13.0,https://www.cbr.ru/press/pr/?file=15092023_133000key.htm,2026-10-07T10:42:11.064762+00:00,HTTP 200; title and publication timestamp verified
+2023-10-27T13:30:00+03:00,2023-10-27,federal,0,2.0,15.0,https://www.cbr.ru/press/pr/?file=27102023_133000key.htm,2026-10-07T10:42:11.064809+00:00,HTTP 200; title and publication timestamp verified
+2023-12-15T13:30:00+03:00,2023-12-15,federal,0,1.0,16.0,https://www.cbr.ru/press/pr/?file=15122023_133000key.htm,2026-10-07T10:42:11.064854+00:00,HTTP 200; title and publication timestamp verified
+2024-07-26T13:30:00+03:00,2024-07-26,federal,0,2.0,18.0,https://www.cbr.ru/press/pr/?file=26072024_133000key.htm,2026-10-07T10:42:11.064897+00:00,HTTP 200; title and publication timestamp verified
+2024-09-13T13:30:00+03:00,2024-09-13,federal,0,1.0,19.0,https://www.cbr.ru/press/pr/?file=13092024_133000key.htm,2026-10-07T10:42:11.064938+00:00,HTTP 200; title and publication timestamp verified
+2024-10-25T13:30:00+03:00,2024-10-25,federal,0,2.0,21.0,https://www.cbr.ru/press/pr/?file=25102024_133000key.htm,2026-10-07T10:42:11.064978+00:00,HTTP 200; title and publication timestamp verified

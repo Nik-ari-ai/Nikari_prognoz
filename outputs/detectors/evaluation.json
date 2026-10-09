@@ -1,0 +1,9 @@
+{
+  "test_data_type": "synthetic",
+  "test_seed": 1907,
+  "real_labels": "unavailable",
+  "real_precision_recall": "not calculated",
+  "warning_before_shock": "not demonstrated",
+  "matching_rule": "Every alarm may match at most one event; only event <= alarm <= event + 6.",
+  "duplicate_alarms": "Repeated alarms for one event count as false alarms; no favourable deduplication."
+}

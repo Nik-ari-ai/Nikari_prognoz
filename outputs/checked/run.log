@@ -1,0 +1,61 @@
+Отсечка 2023-12
+13:44:06 - cmdstanpy - INFO - Chain [1] start processing
+13:44:06 - cmdstanpy - INFO - Chain [1] done processing
+Глобальная модель
+Глобальная модель с сообщениями ЦБ
+Отсечка 2024-03
+Глобальная модель
+Глобальная модель с сообщениями ЦБ
+Отсечка 2024-06
+/Users/a79135/Documents/Codex/2026-10-07/x20-x20-x20-1-mae-r/work/venv/lib/python3.13/site-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+Глобальная модель
+Глобальная модель с сообщениями ЦБ
+Отсечка 2024-09
+/Users/a79135/Documents/Codex/2026-10-07/x20-x20-x20-1-mae-r/work/venv/lib/python3.13/site-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+Глобальная модель
+Глобальная модель с сообщениями ЦБ
+Отсечка 2024-11
+Глобальная модель
+Глобальная модель с сообщениями ЦБ
+
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 2465.79it/s]
+
+Loading weights:   0%|          | 0/101 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 101/101 [00:00<00:00, 7011.91it/s]
+Chronos-Bolt 2023-12
+Chronos-Bolt 2024-03
+Chronos-Bolt 2024-06
+Chronos-Bolt 2024-09
+Chronos-Bolt 2024-11
+                   model  horizon         MAE       R2     sMAPE  n_points
+     LightGBM_CBR_events        1  633.762024 0.983409  8.902271      3330
+        LightGBM_checked        1  677.825244 0.980771  9.112720      3330
+   Prophet_history_aware        1  758.082692 0.981499 10.665219      3330
+                     ETS        1  772.529016 0.980056 10.007128      3330
+       Chronos_Bolt_tiny        1  987.262252 0.969506 11.113361      3330
+Prophet_original_setting        1 1030.628833 0.948464 12.060013      3330
+           SeasonalNaive        1 1240.774174 0.967398 20.285502      3330
+        LightGBM_checked        3  541.486568 0.991850 10.092026      2664
+     LightGBM_CBR_events        3  590.663414 0.991441 10.385550      2664
+   Prophet_history_aware        3  729.437297 0.986952 11.724274      2664
+                     ETS        3  798.111052 0.984989 13.035607      2664
+       Chronos_Bolt_tiny        3 1053.621134 0.966683 14.111484      2664
+Prophet_original_setting        3 1057.803237 0.960126 13.053107      2664
+           SeasonalNaive        3 1260.926426 0.968161 19.549672      2664
+        LightGBM_checked        6  693.539681 0.986372 13.107764      1998
+     LightGBM_CBR_events        6  713.549937 0.989142 13.996772      1998
+   Prophet_history_aware        6  875.954196 0.982899 13.805355      1998
+                     ETS        6 1038.872713 0.976115 17.712271      1998
+           SeasonalNaive        6 1277.458458 0.968691 19.206809      1998
+Prophet_original_setting        6 1346.594270 0.944765 16.453759      1998
+       Chronos_Bolt_tiny        6 1444.129238 0.943485 20.009654      1998
+   Prophet_history_aware       12  909.899390 0.982296 18.041984       666
+     LightGBM_CBR_events       12 1153.758509 0.980039 19.676410       666
+           SeasonalNaive       12 1336.677177 0.971583 17.053701       666
+        LightGBM_checked       12 1448.114755 0.968765 20.308423       666
+                     ETS       12 1455.307789 0.955282 22.583670       666
+Prophet_original_setting       12 2580.704998 0.888743 24.406717       666
+       Chronos_Bolt_tiny       12 3202.124511 0.848620 36.017921       666

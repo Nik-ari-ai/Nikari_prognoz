@@ -1,0 +1,18 @@
+{
+  "raw_rows": 303126,
+  "raw_territories": 2190,
+  "months": 24,
+  "saved_predictions": 152640,
+  "duplicate_prediction_keys": 0,
+  "maximum_actual_difference": 0.0,
+  "maximum_mae_difference": 2.2737367544323206e-13,
+  "negative_predictions": {
+    "ETS": 80,
+    "LightGBM_global": 0,
+    "Prophet": 6007,
+    "SeasonalNaive": 0
+  },
+  "consumption_sha256": "9833ddaaee7b2a182ed4cceeed16469031700ea87d508bd976150c6770ef8a61",
+  "market_access_sha256": "434258afe322b7e6e6610b2552d129ae47094613de72dae3d13f6965a28d1dc1",
+  "interpretation": "Проверена арифметика сохранённых результатов, а не повторено старое обучение."
+}

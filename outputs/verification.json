@@ -1,0 +1,22 @@
+{
+  "forecast_rows": 60606,
+  "saved_models_in_predictions_csv": 7,
+  "models": 7,
+  "unified_table_models": 9,
+  "catboost_added": true,
+  "catboost_predictions": 8658,
+  "catboost_duplicate_keys": 0,
+  "catboost_keys_subset_of_saved": true,
+  "unified_table": "outputs/headline/forecast_unified_all_categories.csv (9 моделей вкл. ансамбль, 4 горизонта, разброс MAE по МО)",
+  "territories_in_common_comparison": 111,
+  "all_actuals_match_raw": true,
+  "all_predictions_finite_and_nonnegative": true,
+  "duplicate_keys": 0,
+  "same_keys_for_all_models": true,
+  "regression_tests_passed": 48,
+  "smoke_test_log": "outputs/smoke_test.log",
+  "statement": "Checks on delivered files, not independent validation of model generalization. 'models'=7 refers to predictions.csv; the unified forecast table adds CatBoost and a pre-specified 0.5/0.5 CatBoost+LightGBM ensemble (9 models). Audit v16: selection and evaluation are fully separated. The committed strategy is chosen ONLY on early cutoffs (selected_on_early); the late slice merely MEASURES that unchanged choice (late_evaluation); the descriptive table minimum is a separate field (benchmark_best_by_horizon). The late slice does NOT participate in selection. A retrospective split of already-seen data is NOT an untouched final test.",
+  "ensemble_added": true,
+  "selection_vs_evaluation": "selected_on_early (early-only, pure function select_strategy_on_early) vs late_evaluation (measurement only, not revised) vs benchmark_best_by_horizon (descriptive). On h=1 the early pick (Prophet) lost on the late slice (863.2 vs ensemble 297.0) and the choice was NOT revised; on h=3 the early pick (ensemble) held; h=6/h=12 are not_evaluated_late (no mature late labels).",
+  "late_change_does_not_change_selection_test": "tests/test_time_safety.py::test_late_actual_change_does_not_change_early_selection"
+}

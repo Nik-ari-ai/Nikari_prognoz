@@ -1,0 +1,145 @@
+test_catboost_forecaster_fits_and_predicts_finite (test_time_safety.CatBoostForecasterTests.test_catboost_forecaster_fits_and_predicts_finite) ... ok
+test_default_global_model_is_lightgbm (test_time_safety.CatBoostForecasterTests.test_default_global_model_is_lightgbm) ... ok
+test_late_actual_change_does_not_change_early_selection (test_time_safety.CatBoostForecasterTests.test_late_actual_change_does_not_change_early_selection) ... ok
+test_select_strategy_on_early_picks_min_early_mae (test_time_safety.CatBoostForecasterTests.test_select_strategy_on_early_picks_min_early_mae) ... ok
+test_select_strategy_on_early_signature_has_no_late (test_time_safety.CatBoostForecasterTests.test_select_strategy_on_early_signature_has_no_late) ... ok
+test_summary_separates_benchmark_selected_and_late (test_time_safety.CatBoostForecasterTests.test_summary_separates_benchmark_selected_and_late) ... ok
+test_event_published_after_cutoff_is_not_selected (test_time_safety.CausalNewsSelectionTests.test_event_published_after_cutoff_is_not_selected) ... ok
+test_latest_available_event_is_chosen (test_time_safety.CausalNewsSelectionTests.test_latest_available_event_is_chosen) ... ok
+test_august_warning_catches_september_onset (test_time_safety.EventEvaluatorBoundaryTests.test_august_warning_catches_september_onset)
+Тревога в августе о сентябрьском событии — это попадание. ... ok
+test_empty_sets_have_explicit_none (test_time_safety.EventEvaluatorBoundaryTests.test_empty_sets_have_explicit_none)
+При пустых множествах precision/recall явно None, без деления на ноль. ... ok
+test_event_without_warning_counts_in_recall (test_time_safety.EventEvaluatorBoundaryTests.test_event_without_warning_counts_in_recall)
+Событие без предупреждения учитывается в знаменателе recall. ... ok
+test_june_event_without_earlier_release_not_in_denominator (test_time_safety.EventEvaluatorBoundaryTests.test_june_event_without_earlier_release_not_in_denominator)
+Июньское событие без более ранних выпусков не попадает в recall. ... ok
+test_two_warnings_one_event_single_hit (test_time_safety.EventEvaluatorBoundaryTests.test_two_warnings_one_event_single_hit)
+Два предупреждения об одном событии дают одно попадание. ... ok
+test_warning_in_onset_month_is_not_early (test_time_safety.EventEvaluatorBoundaryTests.test_warning_in_onset_month_is_not_early)
+Тревога в сам месяц начала эпизода не считается ранней. ... ok
+test_label_available_at_respects_min_duration (test_time_safety.LabelMaturationTests.test_label_available_at_respects_min_duration)
+label_available_at = t + HORIZON + (MIN_DURATION-1) и не раньше. ... ok
+test_matured_training_label_invariant_to_future_change (test_time_safety.LabelMaturationTests.test_matured_training_label_invariant_to_future_change)
+Метка созревшей обучающей строки не меняется при изменении данных ... ok
+test_constant_level_jump_is_not_labeled_shock (test_time_safety.LabelSemanticsTests.test_constant_level_jump_is_not_labeled_shock) ... ok
+test_impulse_with_return_is_labeled_shock (test_time_safety.LabelSemanticsTests.test_impulse_with_return_is_labeled_shock) ... ok
+test_scripts19_runs_and_marks_pending (test_time_safety.LevelShiftIntegrationTests.test_scripts19_runs_and_marks_pending) ... Загружаю данные...
+Устойчивых сдвигов уровня (onset): 58; из них декабрьских: 0
+Распределение по месяцам: {'2023-07': 18, '2023-08': 1, '2023-10': 1, '2023-11': 1, '2024-01': 3, '2024-03': 9, '2024-06': 2, '2024-07': 20, '2024-10': 3}
+
+=== УСТОЙЧИВЫЙ СДВИГ УРОВНЯ: модель против простых правил (равный бюджет) ===
+         method  total_alarms  total_hits  total_false_alarms  total_events  event_precision  event_recall  mean_lead_time_months
+       logistic           404          16                 388            25           0.0396          0.64                 1.9375
+     volatility           404          16                 388            25           0.0396          0.64                 1.9375
+    last_change           404          13                 391            25           0.0322          0.52                 1.9231
+dev_from_median           404           2                 402            25           0.0050          0.08                 2.0000
+Зрелые фолды: ['2024-02', '2024-05', '2024-08']; pending: ['2024-11']
+Сопоставимые фолды в агрегате (где обучилась логистическая): ['2024-05', '2024-08']
+scale_floor (каузальный, reference <= 2023-12): 0.06879; устойчивых сдвигов: 58, декабрьских: 0
+ok
+test_constant_level_jump_is_detected (test_time_safety.LevelShiftTests.test_constant_level_jump_is_detected) ... ok
+test_impulse_with_return_is_not_detected (test_time_safety.LevelShiftTests.test_impulse_with_return_is_not_detected) ... ok
+test_scale_floor_is_positive (test_time_safety.LevelShiftTests.test_scale_floor_is_positive) ... ok
+test_scale_floor_reference_cutoff_ignores_future (test_time_safety.LevelShiftTests.test_scale_floor_reference_cutoff_ignores_future) ... ok
+test_scripts18_runs_and_compares_on_yoy_events (test_time_safety.LikeForLikeIntegrationTests.test_scripts18_runs_and_compares_on_yoy_events) ... Загружаю данные и воспроизвожу разметку scripts/13...
+Обучающий срез: <= 2024-01; тестовое окно: ['2024-06', '2024-07', '2024-08']
+
+=== LIKE-FOR-LIKE на событиях scripts/13 (равный бюджет) ===
+         method  alarms  event_hits  event_false_alarms  onset_events_eligible  event_precision  event_recall  false_alarms_per_100_mo_months  mean_lead_time_months
+       logistic     605          63                 542                    225           0.1041        0.2800                          8.9616                 2.3968
+    last_change     605          61                 544                    225           0.1008        0.2711                          8.9947                 2.2459
+     volatility     605          51                 554                    225           0.0843        0.2267                          9.1601                 2.3922
+dev_from_median     605          27                 578                    225           0.0446        0.1200                          9.5569                 2.5926
+ok
+test_floor_prevents_degenerate_scale (test_time_safety.RiskFormulationTests.test_floor_prevents_degenerate_scale) ... ok
+test_trailing_window_is_causal_and_shortens_warmup (test_time_safety.RiskFormulationTests.test_trailing_window_is_causal_and_shortens_warmup) ... ok
+test_main_runs_and_writes_valid_json (test_time_safety.RiskMainIntegrationTests.test_main_runs_and_writes_valid_json) ... Загружаю данные и метки...
+Калибровочные месяцы: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05']
+Масштаб разметки (robust_sigma) из данных: 0.03534
+Обучающие месяцы (созревшие метки): ['2024-01']
+onset-положительных train/test: 119 / 464
+СТАТУС: trained. Событийная оценка:
+{
+  "event_hits": 37,
+  "event_false_alarms": 250,
+  "onset_events_eligible": 225,
+  "event_precision": 0.1289198606271777,
+  "event_recall": 0.16444444444444445,
+  "false_alarms_per_100_mo_months": 4.133597883597884,
+  "mean_lead_time_months": 2.2972972972972974
+}
+ok
+test_no_shocks_does_not_crash (test_time_safety.RiskScriptRobustnessTests.test_no_shocks_does_not_crash)
+На ряде без вариации (нет шоков) конвейер меток/датасета не падает. ... ok
+test_strict_json_rejects_nan (test_time_safety.RiskScriptRobustnessTests.test_strict_json_rejects_nan)
+JSON результата пишется строго: NaN недопустим. ... ok
+test_scripts20_runs_rolling_and_holdout (test_time_safety.SeasonalBacktestIntegrationTests.test_scripts20_runs_rolling_and_holdout) ... Загружаю данные и строю сезонно-нормализованный сигнал...
+Сезонных шоков (onset): 576 (+304 / -272); декабрьских: 68 (11.8%)
+
+=== СЕЗОННЫЙ ШОК: сравнение методов (сопоставимые фолды, равный бюджет) ===
+        method  total_alarms  total_hits  total_events  event_recall  event_precision  false_alarms_per_100_mo_months  mean_lead_time_months  pr_auc  pr_auc_ci_low  pr_auc_ci_high
+    volatility          1616          49           136        0.3603           0.0303                          9.7160                    1.0  0.0241         0.0167          0.0389
+      catboost          1616          35           136        0.2574           0.0217                          9.8028                    1.0  0.0181         0.0086          0.0421
+      logistic          1616          44           136        0.3235           0.0272                          9.7470                    1.0  0.0139         0.0098          0.0220
+      lightgbm          1616          31           136        0.2279           0.0192                          9.8276                    1.0  0.0127         0.0085          0.0228
+   last_change          1616          38           136        0.2794           0.0235                          9.7842                    1.0  0.0121         0.0085          0.0198
+seasonal_naive          1616          32           136        0.2353           0.0198                          9.8214                    1.0  0.0098         0.0074          0.0140
+        random          1616          15           136        0.1103           0.0093                          9.9268                    1.0  0.0090         0.0067          0.0135
+
+Сопоставимые rolling-фолды: ['2024-02', '2024-03', '2024-04', '2024-05', '2024-06', '2024-07', '2024-08', '2024-09']
+Пулинг строк (сопоставимые): 16128, из них положительных: 136
+
+=== ФИНАЛЬНЫЙ HOLDOUT (2024-10, отдельно) ===
+        method  alarms  event_hits  onset_events_eligible  event_recall  event_precision  mean_lead_time_months
+   last_change     202          13                     24      0.541667         0.064356                    1.0
+    volatility     202          12                     24      0.500000         0.059406                    1.0
+      lightgbm     202          12                     24      0.500000         0.059406                    1.0
+      catboost     202          11                     24      0.458333         0.054455                    1.0
+      logistic     202           9                     24      0.375000         0.044554                    1.0
+seasonal_naive     202           4                     24      0.166667         0.019802                    1.0
+        random     202           3                     24      0.125000         0.014851                    1.0
+ok
+test_common_december_spike_is_not_a_shock (test_time_safety.SeasonalShockTests.test_common_december_spike_is_not_a_shock) ... ok
+test_idiosyncratic_jump_is_flagged (test_time_safety.SeasonalShockTests.test_idiosyncratic_jump_is_flagged) ... ok
+test_thresholds_are_causal (test_time_safety.SeasonalShockTests.test_thresholds_are_causal) ... ok
+test_duplicate_predictions_are_rejected (test_time_safety.TimeSafetyTests.test_duplicate_predictions_are_rejected) ... ok
+test_early_alarm_is_not_counted_as_detection (test_time_safety.TimeSafetyTests.test_early_alarm_is_not_counted_as_detection) ... ok
+test_future_news_do_not_enter_recursion (test_time_safety.TimeSafetyTests.test_future_news_do_not_enter_recursion) ... ok
+test_future_values_do_not_change_features (test_time_safety.TimeSafetyTests.test_future_values_do_not_change_features) ... ok
+test_online_decisions_do_not_change_when_future_arrives (test_time_safety.TimeSafetyTests.test_online_decisions_do_not_change_when_future_arrives) ... ok
+test_publication_time_controls_news (test_time_safety.TimeSafetyTests.test_publication_time_controls_news) ... ok
+test_year_over_year_uses_twelve_months (test_time_safety.TimeSafetyTests.test_year_over_year_uses_twelve_months) ... ok
+test_budget_larger_than_rows_marks_all (test_time_safety.TopKAlarmBudgetTests.test_budget_larger_than_rows_marks_all) ... ok
+test_exactly_k_even_with_tied_scores (test_time_safety.TopKAlarmBudgetTests.test_exactly_k_even_with_tied_scores) ... ok
+test_tie_break_is_deterministic_by_id (test_time_safety.TopKAlarmBudgetTests.test_tie_break_is_deterministic_by_id) ... ok
+test_scripts15_excludes_november_and_equal_budget (test_time_safety.TscvIntegrationTests.test_scripts15_excludes_november_and_equal_budget) ... Загружаю данные...
+Строю сигнал с коротким прогревом (окно 6)...
+Сигнал доступен с 2023-08 по 2024-12
+Последний наблюдаемый месяц: 2024-12
+
+=== СРАВНЕНИЕ МЕТОДОВ (rolling-origin, равный бюджет, ТОЛЬКО зрелые фолды) ===
+         method  total_alarms  total_hits  total_false_alarms  total_events  event_precision  event_recall  false_alarms_per_100_mo_months  mean_lead_time_months
+    last_change           606           4                 602             7           0.0066        0.5714                          9.9537                    3.0
+       logistic           606           2                 604             7           0.0033        0.2857                          9.9868                    3.0
+dev_from_median           606           2                 604             7           0.0033        0.2857                          9.9868                    3.0
+     volatility           606           2                 604             7           0.0033        0.2857                          9.9868                    1.0
+
+Зрелые фолды (оценены): ['2024-02', '2024-05', '2024-08']
+Незрелые фолды (pending, НЕ оценены): ['2024-11']
+Обучающих срезов по зрелым фолдам (мес): [2, 5, 8]
+Доля декабрьских onset по фолдам:
+  2024-02: 98.34%
+  2024-05: 97.55%
+  2024-08: 98.44%
+  2024-11: 98.30%
+ok
+test_november_fold_is_classified_pending (test_time_safety.TscvMaturationTests.test_november_fold_is_classified_pending) ... ok
+test_catboost_has_no_duplicate_keys (test_time_safety.UnifiedForecastArtifactTests.test_catboost_has_no_duplicate_keys) ... ok
+test_catboost_keys_are_subset_of_saved (test_time_safety.UnifiedForecastArtifactTests.test_catboost_keys_are_subset_of_saved) ... ok
+test_unified_table_has_core_eight_models (test_time_safety.UnifiedForecastArtifactTests.test_unified_table_has_core_eight_models) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 329.039s
+
+OK

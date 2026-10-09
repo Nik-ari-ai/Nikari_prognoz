@@ -1,0 +1,94 @@
+Загружаю данные...
+Строю широкую матрицу значений по всей панели...
+Строю статические признаки и таблицу календаря...
+Территорий в выборке: 120
+Рядов (территория x категория) в выборке: 720
+Отсечки: 2023-06, 2023-07, 2023-08, 2023-09, 2023-10, 2023-11, 2023-12, 2024-01, 2024-02, 2024-03, 2024-04, 2024-05, 2024-06, 2024-07, 2024-08, 2024-09, 2024-10, 2024-11
+Горизонты: 1, 3, 6, 12
+Запускаю пообъектные модели (SeasonalNaive, Prophet, ETS)...
+11:10:25 - cmdstanpy - INFO - Chain [1] start processing
+11:10:27 - cmdstanpy - INFO - Chain [1] done processing
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+/usr/local/lib/python3.13/dist-packages/statsmodels/tsa/holtwinters/model.py:1065: ConvergenceWarning: Optimization failed to converge. Check mle_retvals.
+  res = self._optimize_parameters(res, use_brute, method, minimize_kwargs)
+Пообъектные модели готовы, строк результата: 116640
+Запускаю глобальную модель LightGBM...
+Глобальная модель готова, строк результата: 36000
+==== МЕТРИКИ НА ВСЕХ ТОЧКАХ (MAE, R2, sMAPE) ====
+
+          model  horizon          MAE         R2      sMAPE  n_points
+LightGBM_global        1   562.236605   0.987682   7.423044     12240
+            ETS        1   583.815109   0.988477   8.556443     12960
+  SeasonalNaive        1  1039.626698   0.973963  15.419448     12960
+        Prophet        1  2053.903927   0.697556  30.431033     12960
+            ETS        3   790.182846   0.982232  13.646936     11520
+LightGBM_global        3   792.783537   0.980982  12.313637     10800
+  SeasonalNaive        3  1183.837500   0.969339  18.055243     11520
+        Prophet        3 11387.923856 -14.394242  52.834338     11520
+            ETS        6  1002.295580   0.968350  18.240604      9360
+LightGBM_global        6  1092.647358   0.966578  17.471197      8640
+  SeasonalNaive        6  1340.825427   0.965629  19.653196      9360
+        Prophet        6 16410.438209 -32.588205  60.626987      9360
+LightGBM_global       12  1269.612707   0.962295  20.197252      4320
+  SeasonalNaive       12  1335.229167   0.968697  18.399257      5040
+            ETS       12  1434.512656   0.931097  25.528006      5040
+        Prophet       12 29820.366685 -56.713618 101.840441      5040
+==== МЕТРИКИ НА ОБЩИХ ТОЧКАХ ВСЕХ МОДЕЛЕЙ (честное сравнение) ====
+
+          model  horizon          MAE         R2     sMAPE  n_points
+LightGBM_global        1   562.236605   0.987682  7.423044     12240
+            ETS        1   604.585947   0.987985  8.640079     12240
+  SeasonalNaive        1  1079.130229   0.972878 15.907092     12240
+        Prophet        1  1816.104775   0.745294 25.779678     12240
+            ETS        3   790.064830   0.982381 13.667788     10800
+LightGBM_global        3   792.783537   0.980982 12.313637     10800
+  SeasonalNaive        3  1237.053889   0.967987 18.665232     10800
+        Prophet        3  9992.458901 -12.801346 45.652029     10800
+            ETS        6   991.592439   0.967806 17.589000      8640
+LightGBM_global        6  1092.647358   0.966578 17.471197      8640
+  SeasonalNaive        6  1294.948380   0.968014 19.295327      8640
+        Prophet        6 15704.946119 -33.608465 55.525665      8640
+LightGBM_global       12  1269.612707   0.962295 20.197252      4320
+  SeasonalNaive       12  1314.330556   0.969746 17.914689      4320
+            ETS       12  1430.693339   0.929641 24.523284      4320
+        Prophet       12 30853.918871 -62.281691 98.290118      4320
+Готово. Время выполнения, мин: 48.6

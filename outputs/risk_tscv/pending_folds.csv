@@ -1,0 +1,5 @@
+test_origin,method,alarms,label_fully_observed_at,status
+2024-11,logistic,202,2025-03,pending_unobserved_future
+2024-11,dev_from_median,202,2025-03,pending_unobserved_future
+2024-11,last_change,202,2025-03,pending_unobserved_future
+2024-11,volatility,202,2025-03,pending_unobserved_future

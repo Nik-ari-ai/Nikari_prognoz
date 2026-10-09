@@ -1,0 +1,48 @@
+{
+  "target": "onset (начало нового эпизода шока)",
+  "test_start": "2024-06",
+  "horizon_months": 3,
+  "min_duration": 2,
+  "threshold_sigma": 3.0,
+  "calibration_months": [
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05"
+  ],
+  "calibration_observations": 10080,
+  "robust_sigma_from_data": 0.03533795752710664,
+  "calibration_degenerate": false,
+  "max_abs_centered": 0.3741483142651649,
+  "label_maturation": "метка окна t+1..t+h подтверждается в t+h+(min_duration-1)",
+  "metric_note": "average_precision_score — это average precision, а не трапецеидальная площадь под PR-кривой.",
+  "last_mature_train_month": "2024-01",
+  "train_months": [
+    "2024-01"
+  ],
+  "test_months": [
+    "2024-06",
+    "2024-07",
+    "2024-08"
+  ],
+  "train_rows": 2016,
+  "test_rows": 6048,
+  "onset_positives_train": 119,
+  "onset_positives_test": 464,
+  "shock_months_total": 1594,
+  "onset_events_total": 444,
+  "status": "trained",
+  "average_precision_onset_test": 0.11562168926788645,
+  "alarm_threshold_from_train_q90": 0.7449809623595214,
+  "event_evaluation": {
+    "event_hits": 37,
+    "event_false_alarms": 250,
+    "onset_events_eligible": 225,
+    "event_precision": 0.1289198606271777,
+    "event_recall": 0.16444444444444445,
+    "false_alarms_per_100_mo_months": 4.133597883597884,
+    "mean_lead_time_months": 2.2972972972972974
+  },
+  "honest_conclusion": "Onset-модель обучена; приведена СОБЫТИЙНАЯ оценка. Результат следует считать разведочным: один годовой переход и мало событий не позволяют заявлять надёжное раннее предупреждение."
+}

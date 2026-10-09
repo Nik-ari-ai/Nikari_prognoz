@@ -1,0 +1,7 @@
+{
+  "model": "amazon/chronos-bolt-tiny",
+  "revision": "a0e552de83495b5c28c14c71c374f3e33280b340",
+  "device": "cpu",
+  "quantile": 0.5,
+  "training_data_contamination": "Absence of SberIndex in pretraining is not independently verified."
+}

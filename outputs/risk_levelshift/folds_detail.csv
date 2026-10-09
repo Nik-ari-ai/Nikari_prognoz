@@ -1,0 +1,16 @@
+test_origin,mature,status,comparable,method,train_months,train_onset_positives,alarms,event_hits,event_false_alarms,onset_events_eligible,event_precision,event_recall,mean_lead_time_months
+2024-02,True,evaluated,False,dev_from_median,2,4,202,1.0,201.0,9.0,0.0049504950495049506,0.1111111111111111,1.0
+2024-02,True,evaluated,False,last_change,2,4,202,3.0,199.0,9.0,0.01485148514851485,0.3333333333333333,1.0
+2024-02,True,evaluated,False,volatility,2,4,202,2.0,200.0,9.0,0.009900990099009901,0.2222222222222222,1.0
+2024-05,True,evaluated,True,logistic,5,23,202,16.0,186.0,22.0,0.07920792079207921,0.7272727272727273,1.9375
+2024-05,True,evaluated,True,dev_from_median,5,23,202,0.0,202.0,22.0,0.0,0.0,
+2024-05,True,evaluated,True,last_change,5,23,202,11.0,191.0,22.0,0.054455445544554455,0.5,1.9090909090909092
+2024-05,True,evaluated,True,volatility,5,23,202,16.0,186.0,22.0,0.07920792079207921,0.7272727272727273,1.9375
+2024-08,True,evaluated,True,logistic,8,43,202,0.0,202.0,3.0,0.0,0.0,
+2024-08,True,evaluated,True,dev_from_median,8,43,202,2.0,200.0,3.0,0.009900990099009901,0.6666666666666666,2.0
+2024-08,True,evaluated,True,last_change,8,43,202,2.0,200.0,3.0,0.009900990099009901,0.6666666666666666,2.0
+2024-08,True,evaluated,True,volatility,8,43,202,0.0,202.0,3.0,0.0,0.0,
+2024-11,False,pending_unobserved_future,False,logistic,11,107,202,,,,,,
+2024-11,False,pending_unobserved_future,False,dev_from_median,11,107,202,,,,,,
+2024-11,False,pending_unobserved_future,False,last_change,11,107,202,,,,,,
+2024-11,False,pending_unobserved_future,False,volatility,11,107,202,,,,,,
